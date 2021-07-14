@@ -49,14 +49,14 @@ def promote(update: Update, context: CallbackContext) -> str:
         not (promoter.can_promote_members or promoter.status == "creator")
         and user.id not in SUDO_USERS
     ):
-        message.reply_text("You don't have the necessary rights to do that!")
+        message.reply_text("No tienes los derechos necesarios para hacer eso!")
         return
 
     user_id = extract_user(message, args)
 
     if not user_id:
         message.reply_text(
-            "You don't seem to be referring to a user or the ID specified is incorrect.."
+            "No parece que se esté refiriendo a un usuario o el ID especificado es incorrecto.."
         )
         return
 
@@ -66,11 +66,11 @@ def promote(update: Update, context: CallbackContext) -> str:
         return
 
     if user_member.status == "administrator" or user_member.status == "creator":
-        message.reply_text("How am I meant to promote someone that's already an admin?")
+        message.reply_text("Cómo se supone que debo promocionar a alguien que ya es administrador?")
         return
 
     if user_id == bot.id:
-        message.reply_text("I can't promote myself! Get an admin to do it for me.")
+        message.reply_text("No puedo promocionarme! Consiga un administrador para que lo haga por mí.")
         return
 
     # set same perms as bot - bot can't assign higher perms than itself!
@@ -91,14 +91,14 @@ def promote(update: Update, context: CallbackContext) -> str:
         )
     except BadRequest as err:
         if err.message == "User_not_mutual_contact":
-            message.reply_text("I can't promote someone who isn't in the group.")
+            message.reply_text("No puedo promocionar a alguien que no está en el grupo.")
         else:
-            message.reply_text("An error occured while promoting.")
+            message.reply_text("Ocurrió un error al promocionar.")
         return
 
     bot.sendMessage(
         chat.id,
-        f"Sucessfully promoted <b>{user_member.user.first_name or user_id}</b>!",
+        f"Promocionado con éxito <b>{user_member.user.first_name or user_id}</b>!",
         parse_mode=ParseMode.HTML,
     )
 
@@ -131,13 +131,13 @@ def demote(update: Update, context: CallbackContext) -> str:
         not (demoter.can_promote_members or demoter.status == "creator")
         and user.id not in SUDO_USERS
     ):
-        message.reply_text("You don't have the necessary rights to do that!")
+        message.reply_text("No tienes los derechos necesarios para hacer eso!")
         return
 
     user_id = extract_user(message, args)
     if not user_id:
         message.reply_text(
-            "You don't seem to be referring to a user or the ID specified is incorrect.."
+            "No parece que se esté refiriendo a un usuario o el ID especificado es incorrecto.."
         )
         return
 
@@ -147,15 +147,15 @@ def demote(update: Update, context: CallbackContext) -> str:
         return
 
     if user_member.status == "creator":
-        message.reply_text("This person CREATED the chat, how would I demote them?")
+        message.reply_text("Esta persona CREÓ el chat, ¿cómo la degradaría??")
         return
 
     if not user_member.status == "administrator":
-        message.reply_text("Can't demote what wasn't promoted!")
+        message.reply_text("No se puede degradar lo que no se promovió")
         return
 
     if user_id == bot.id:
-        message.reply_text("I can't demote myself! Get an admin to do it for me.")
+        message.reply_text("No puedo degradarme! Consiga un administrador para que lo haga por mí.")
         return
 
     try:
@@ -174,7 +174,7 @@ def demote(update: Update, context: CallbackContext) -> str:
 
         bot.sendMessage(
             chat.id,
-            f"Sucessfully demoted <b>{user_member.user.first_name or user_id}</b>!",
+            f"Degradado con éxito <b>{user_member.user.first_name or user_id}</b>!",
             parse_mode=ParseMode.HTML,
         )
 
@@ -188,8 +188,8 @@ def demote(update: Update, context: CallbackContext) -> str:
         return log_message
     except BadRequest:
         message.reply_text(
-            "Could not demote. I might not be admin, or the admin status was appointed by another"
-            " user, so I can't act upon them!"
+            "No se pudo degradar. Es posible que no sea administrador o que el estado de administrador fue designado por otro"
+            " usuario, por lo que no puedo actuar sobre ellos"
         )
         return
 
@@ -201,7 +201,7 @@ def refresh_admin(update, _):
     except KeyError:
         pass
 
-    update.effective_message.reply_text("Admins cache refreshed!")
+    update.effective_message.reply_text("Caché de administradores actualizado!")
 
 
 @connection_status
@@ -223,46 +223,46 @@ def set_title(update: Update, context: CallbackContext):
 
     if not user_id:
         message.reply_text(
-            "You don't seem to be referring to a user or the ID specified is incorrect.."
+            "No parece que se esté refiriendo a un usuario o el ID especificado es incorrecto.."
         )
         return
 
     if user_member.status == "creator":
         message.reply_text(
-            "This person CREATED the chat, how can i set custom title for him?"
+            "Esta persona CREÓ el chat, ¿cómo puedo configurar un título personalizado para él?"
         )
         return
 
     if user_member.status != "administrator":
         message.reply_text(
-            "Can't set title for non-admins!\nPromote them first to set custom title!"
+            "No se puede establecer el título para los no administradores!\nPrimítelos primero para establecer un título personalizado!!"
         )
         return
 
     if user_id == bot.id:
         message.reply_text(
-            "I can't set my own title myself! Get the one who made me admin to do it for me."
+            "No puedo establecer mi propio título yo mismo! Haz que el que me hizo administrador lo haga por mí."
         )
         return
 
     if not title:
-        message.reply_text("Setting blank title doesn't do anything!")
+        message.reply_text("Establecer un título en blanco no hace nada!")
         return
 
     if len(title) > 16:
         message.reply_text(
-            "The title length is longer than 16 characters.\nTruncating it to 16 characters."
+            "La longitud del título es superior a 16 caracteres.\nTruncarlo a 16 caracteres."
         )
 
     try:
         bot.setChatAdministratorCustomTitle(chat.id, user_id, title)
     except BadRequest:
-        message.reply_text("Either they aren't promoted by me or you set a title text that is impossible to set.")
+        message.reply_text("O no los promocione yo o estableces un texto de título que es imposible de configurar.")
         return
 
     bot.sendMessage(
         chat.id,
-        f"Sucessfully set title for <code>{user_member.user.first_name or user_id}</code> "
+        f"Se estableció correctamente el título para <code>{user_member.user.first_name or user_id}</code> "
         f"to <code>{html.escape(title[:16])}</code>!",
         parse_mode=ParseMode.HTML,
     )
@@ -277,7 +277,7 @@ def setchatpic(update, context):
     user = update.effective_user
 
     if user_can_changeinfo(chat, user, context.bot.id) is False:
-        msg.reply_text("You are missing right to change group info!")
+        msg.reply_text("Falta el derecho a cambiar la información del grupo!")
         return
 
     if msg.reply_to_message:
@@ -286,15 +286,15 @@ def setchatpic(update, context):
         elif msg.reply_to_message.document:
             pic_id = msg.reply_to_message.document.file_id
         else:
-            msg.reply_text("You can only set some photo as chat pic!")
+            msg.reply_text("Solo puedes configurar alguna foto como imagen de chat!")
             return
-        dlmsg = msg.reply_text("Just a sec...")
+        dlmsg = msg.reply_text("Solo un segundo...")
         tpic = context.bot.get_file(pic_id)
         tpic.download("gpic.png")
         try:
             with open("gpic.png", "rb") as chatp:
                 context.bot.set_chat_photo(int(chat.id), photo=chatp)
-                msg.reply_text("Successfully set new chatpic!")
+                msg.reply_text("Establecer con éxito nuevo chatpic!")
         except BadRequest as excp:
             msg.reply_text(f"Error! {excp.message}")
         finally:
@@ -302,7 +302,7 @@ def setchatpic(update, context):
             if os.path.isfile("gpic.png"):
                 os.remove("gpic.png")
     else:
-        msg.reply_text("Reply to some photo or file to set new chat pic!")
+        msg.reply_text("Responder a alguna foto o archivo para establecer una nueva imagen de chat!")
 
 
 @bot_admin
@@ -314,11 +314,11 @@ def rmchatpic(update, context):
     user = update.effective_user
 
     if user_can_changeinfo(chat, user, context.bot.id) is False:
-        msg.reply_text("You don't have enough rights to delete group photo")
+        msg.reply_text("No tienes suficientes derechos para eliminar la foto de grupo")
         return
     try:
         context.bot.delete_chat_photo(int(chat.id))
-        msg.reply_text("Successfully deleted chat's profile photo!")
+        msg.reply_text("La foto de perfil del chat se eliminó correctamente!")
     except BadRequest as excp:
         msg.reply_text(f"Error! {excp.message}.")
         return
@@ -334,18 +334,18 @@ def setchat_title(update, context):
     args = context.args
 
     if user_can_changeinfo(chat, user, context.bot.id) is False:
-        msg.reply_text("You don't have enough rights to change chat info!")
+        msg.reply_text("No tienes suficientes derechos para cambiar la información del chat!")
         return
 
     title = " ".join(args)
     if not title:
-        msg.reply_text("Enter some text to set new title in your chat!")
+        msg.reply_text("Ingrese un poco de texto para establecer un nuevo título en su chat!")
         return
 
     try:
         context.bot.set_chat_title(int(chat.id), str(title))
         msg.reply_text(
-            f"Successfully set <b>{title}</b> as new chat title!",
+            f"Establecido con éxito <b>{title}</b> como nuevo título de chat!",
             parse_mode=ParseMode.HTML,
         )
     except BadRequest as excp:
@@ -362,27 +362,27 @@ def set_sticker(update, context):
     user = update.effective_user
 
     if user_can_changeinfo(chat, user, context.bot.id) is False:
-        return msg.reply_text("You're missing rights to change chat info!")
+        return msg.reply_text("Te faltan derechos para cambiar la información del chat!")
 
     if msg.reply_to_message:
         if not msg.reply_to_message.sticker:
             return msg.reply_text(
-                "You need to reply to some sticker to set chat sticker set!"
+                "Debes responder a alguna pegatina para configurar el conjunto de pegatinas de chat!"
             )
         stkr = msg.reply_to_message.sticker.set_name
         try:
             context.bot.set_chat_sticker_set(chat.id, stkr)
             msg.reply_text(
-                f"Successfully set new group stickers in {chat.title}!")
+                f"Colocó con éxito nuevas pegatinas de grupo {chat.title}!")
         except BadRequest as excp:
             if excp.message == "Participants_too_few":
                 return msg.reply_text(
-                    "Sorry, due to telegram restrictions chat needs to have minimum 100 members before they can have group stickers!"
+                    "Lo sentimos, debido a las restricciones de telegramas, el chat debe tener un mínimo de 100 miembros antes de que puedan tener pegatinas de grupo!"
                 )
             msg.reply_text(f"Error! {excp.message}.")
     else:
         msg.reply_text(
-            "You need to reply to some sticker to set chat sticker set!")
+            "Debes responder a alguna pegatina para configurar el conjunto de pegatinas de chat!")
 
 
 @bot_admin
@@ -394,26 +394,26 @@ def set_desc(update, context):
     user = update.effective_user
 
     if user_can_changeinfo(chat, user, context.bot.id) is False:
-        return msg.reply_text("You're missing rights to change chat info!")
+        return msg.reply_text("Te faltan derechos para cambiar la información del chat!")
 
     tesc = msg.text.split(None, 1)
     if len(tesc) >= 2:
         desc = tesc[1]
     else:
-        return msg.reply_text("Setting empty description won't do anything!")
+        return msg.reply_text("Establecer una descripción vacía no hará nada!")
     try:
         if len(desc) > 255:
             return msg.reply_text(
-                "Description must needs to be under 255 characters!")
+                "La descripción debe tener menos de 255 caracteres!")
         context.bot.set_chat_description(chat.id, desc)
         msg.reply_text(
-            f"Successfully updated chat description in {chat.title}!")
+            f"Descripción del chat actualizada con éxito en {chat.title}!")
     except BadRequest as excp:
         msg.reply_text(f"Error! {excp.message}.")
 
 
 def __chat_settings__(chat_id, user_id):
-    return "You are *admin*: `{}`".format(
+    return "Eres *admin*: `{}`".format(
         dispatcher.bot.get_chat_member(chat_id, user_id).status
         in ("administrator", "creator")
     )
@@ -502,11 +502,11 @@ def invite(update: Update, context: CallbackContext):
             update.effective_message.reply_text(invitelink)
         else:
             update.effective_message.reply_text(
-                "I don't have access to the invite link, try changing my permissions!"
+                "No tengo acceso al enlace de invitación, intente cambiar mis permisos!"
             )
     else:
         update.effective_message.reply_text(
-            "I can only give you invite links for supergroups and channels, sorry!"
+            "Solo puedo darte enlaces de invitación para supergrupos y canales, lo siento!"
         )
 
 
@@ -518,7 +518,7 @@ def adminlist(update: Update, context: CallbackContext):
     bot = context.bot
 
     if update.effective_message.chat.type == "private":
-        send_message(update.effective_message, "This command only works in Groups.")
+        send_message(update.effective_message, "Este comando solo funciona en grupos.")
         return
 
     chat = update.effective_chat
@@ -535,7 +535,7 @@ def adminlist(update: Update, context: CallbackContext):
         )
 
     administrators = bot.getChatAdministrators(chat_id)
-    text = "Admins in <b>{}</b>:".format(html.escape(update.effective_chat.title))
+    text = "Administradores en <b>{}</b>:".format(html.escape(update.effective_chat.title))
 
     bot_admin_list = []
 
@@ -545,7 +545,7 @@ def adminlist(update: Update, context: CallbackContext):
         custom_title = admin.custom_title
 
         if user.first_name == "":
-            name = "☠ Deleted Account"
+            name = "☠ Cuenta eliminada"
         else:
             name = "{}".format(
                 mention_html(
@@ -561,7 +561,7 @@ def adminlist(update: Update, context: CallbackContext):
         # if user.username:
         #    name = escape_markdown("@" + user.username)
         if status == "creator":
-            text += "\n 👑 Creator:"
+            text += "\n 👑 Creador:"
             text += "\n<code> • </code>{}\n".format(name)
 
             if custom_title:
@@ -578,7 +578,7 @@ def adminlist(update: Update, context: CallbackContext):
         custom_title = admin.custom_title
 
         if user.first_name == "":
-            name = "☠ Deleted Account"
+            name = "☠ Cuenta eliminada"
         else:
             name = "{}".format(
                 mention_html(
@@ -624,23 +624,24 @@ def adminlist(update: Update, context: CallbackContext):
 
 
 __help__ = """
- • `/admins`*:* list of admins in the chat
+ • `/admins`*:* lista de administradores en el chat
 
-*Admins only:*
- • `/pin`*:* silently pins the message replied to - add `'loud'` or `'notify'` to give notifs to users
- • `/unpin`*:* unpins the currently pinned message
- • `/invitelink`*:* gets invitelink
- • `/link`*:* same as invitelink
- • `/promote`*:* promotes the user replied to
- • `/demote`*:* demotes the user replied to
- • `/title <title here>`*:* sets a custom title for an admin that the bot promoted
- • `/admincache`*:* force refresh the admins list
- • `/setgtitle` `<newtitle>`*:* Sets new chat title in your group.
- • `/setgpic`*:* As a reply to file or photo to set group profile pic!
- • `/delgpic`*:* Same as above but to remove group profile pic.
- • `/setsticker`*:* As a reply to some sticker to set it as group sticker set!
- • `/setdescription` `<description>`*:* Sets new chat description in group.
- • `/zombies`*:* scan and clean zombies
+*Solo Administradores:*
+ • `/pin`*:* fija silenciosamente el mensaje al que respondió - agregar `'loud'` or`'notify'` Dar notificaciones a los usuarios.
+ • `/unpin`*:* elimina el mensaje anclado actualmente
+ • `/invitelink`*:* obtiene el enlace de invitaciónk
+ • `/link`*:* Lo mismo que invitelink
+ • `/promote`*:* Promueve al usuario respondido
+ • `/demote`*:* Degrada al usuario respondido
+ • `/title <título aquí>`*:*establece un título personalizado para un administrador promovido por el bot
+ • `/admincache`*:* forzar la actualización de la lista de administradores
+ • `/setgtitle` `<nuevo título>`*:* Establece un nuevo título de chat en su grupo.
+ • `/setgpic`*:* Como respuesta a un archivo o foto para configurar una foto de perfil de grupo!
+ • `/delgpic`*:* Igual que el anterior pero para eliminar la foto del perfil del grupo.
+ • `/setsticker`*:* Como respuesta a alguna pegatina para configurarla como conjunto de pegatinas de grupo!
+ • `/setdescription` `<description>`*:* Establece una nueva descripción de chat en el grupo.
+ • `/zombies`*:* Escanear cuentas eliminadas
+ • `/zombies clean` *:* Limpia cuentas eliminadas
 """
 
 ADMINLIST_HANDLER = DisableAbleCommandHandler("admins", adminlist, run_async=True)
@@ -671,7 +672,7 @@ dispatcher.add_handler(SETCHAT_TITLE_HANDLER)
 dispatcher.add_handler(SETSTICKET_HANDLER)
 dispatcher.add_handler(SETDESC_HANDLER)
 
-__mod_name__ = "Admin"
+__mod_name__ = "Administrador"
 __command_list__ = [
     "adminlist",
     "admins",
