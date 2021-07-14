@@ -92,7 +92,7 @@ Hola! mi nombre es *{}*.
 Y lo siguiente:
 """.format(
     dispatcher.bot.first_name,
-    "" if not ALLOW_EXCL else "\nTodos los comandos se pueden utilizar con / o !.\n",
+    "" if not ALLOW_EXCL else "\nTodos los comandos se pueden utilizar con/ o !.\n",
 )
 
 HUNTERALPHA_IMG = "https://i.imgur.com/N2Ru7ib.jpg"
@@ -116,7 +116,7 @@ for module_name in ALL_MODULES:
     if imported_module.__mod_name__.lower() not in IMPORTED:
         IMPORTED[imported_module.__mod_name__.lower()] = imported_module
     else:
-        raise Exception("¡No se pueden tener dos módulos con el mismo nombre! Por favor cambie uno")
+        raise Exception("No se pueden tener dos módulos con el mismo nombre! Por favor cambie uno")
 
     if hasattr(imported_module, "__help__") and imported_module.__help__:
         HELPABLE[imported_module.__mod_name__.lower()] = imported_module
@@ -150,7 +150,7 @@ for module_name in ALL_MODULES:
 # do not async
 def send_help(chat_id, text, keyboard=None):
     if not keyboard:
-        keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help_"))
+        keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
     dispatcher.bot.send_message(
         chat_id=chat_id,
         text=text,
@@ -215,18 +215,18 @@ def start(update: Update, context: CallbackContext):
                         ],
                         [
                             InlineKeyboardButton(
-                                text="📂Codigo fuente📂",
-                                url="https://github.com/AlphaEliasPY/HunterAlpha",
-                            ),
-                            InlineKeyboardButton(
                                 text="👀𝔸𝕟𝕕𝕣𝕠𝕚𝕕ℂ𝕒𝕧𝕖🏴‍☠️",
                                 url="https://t.me/AndroidCave",
+                            ),
+                            InlineKeyboardButton(
+                                text="📂Canal LOGGER📂",
+                                url="https://t.me/joinchat/g2un-9HwasJmNjMx",
                             ),
                         ],
                         [
                             InlineKeyboardButton(
-                                text="📂Canal LOGGER📂",
-                                url="https://t.me/joinchat/g2un-9HwasJmNjMx",
+                                text="Minato️ Namikaze Support🙈",
+                                url="https://t.me/HunterAlphaSupport",
                             ),
                             InlineKeyboardButton(
                                 text="👑Mi dueño👑",
@@ -244,7 +244,7 @@ def start(update: Update, context: CallbackContext):
             )
     else:
         update.effective_message.reply_text(
-            "Ya estoy despierto!\n<b>No he dormido desde:</b> <code>{}</code>".format(
+            "I'm awake already!\n<b>Haven't slept since:</b> <code>{}</code>".format(
                 uptime
             ),
             parse_mode=ParseMode.HTML,
@@ -294,7 +294,7 @@ def help_button(update: Update, context: CallbackContext):
         if mod_match:
             module = mod_match.group(1)
             text = (
-                "Aquí está la help para el *{}* modulo:\n".format(
+                "Here is the help for the *{}* module:\n".format(
                     HELPABLE[module].__mod_name__
                 )
                 + HELPABLE[module].__help__
@@ -304,7 +304,7 @@ def help_button(update: Update, context: CallbackContext):
                 parse_mode=ParseMode.MARKDOWN,
                 disable_web_page_preview=True,
                 reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton(text="Atras", callback_data="help_back")]]
+                    [[InlineKeyboardButton(text="Back", callback_data="help_back")]]
                 ),
             )
 
@@ -354,7 +354,7 @@ def get_help(update: Update, context: CallbackContext):
         if len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):
             module = args[1].lower()
             update.effective_message.reply_text(
-                f"Contáctame por la tarde para obtener help de {module.capitalize()}",
+                f"Contact me in PM to get help of {module.capitalize()}",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
@@ -370,7 +370,7 @@ def get_help(update: Update, context: CallbackContext):
             )
             return
         update.effective_message.reply_text(
-            "Contácteme en PM para obtener la lista de posibles comandos.",
+            "Contact me in PM to get the list of possible commands.",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
@@ -387,7 +387,7 @@ def get_help(update: Update, context: CallbackContext):
     elif len(args) >= 2 and any(args[1].lower() == x for x in HELPABLE):
         module = args[1].lower()
         text = (
-            "Aquí está la ayuda disponible para *{}* modulo:\n".format(
+            "Here is the available help for the *{}* module:\n".format(
                 HELPABLE[module].__mod_name__
             )
             + HELPABLE[module].__help__
@@ -413,14 +413,14 @@ def send_settings(chat_id, user_id, user=False):
             )
             dispatcher.bot.send_message(
                 user_id,
-                "Estas son tus configuraciones actuales:" + "\n\n" + settings,
+                "These are your current settings:" + "\n\n" + settings,
                 parse_mode=ParseMode.MARKDOWN,
             )
 
         else:
             dispatcher.bot.send_message(
                 user_id,
-                "Parece que no hay ninguna configuración específica de usuario disponible :'(",
+                "Seems like there aren't any user specific settings available :'(",
                 parse_mode=ParseMode.MARKDOWN,
             )
 
@@ -429,7 +429,7 @@ def send_settings(chat_id, user_id, user=False):
             chat_name = dispatcher.bot.getChat(chat_id).title
             dispatcher.bot.send_message(
                 user_id,
-                text="¿Qué módulo te gustaría comprobar? {}'s ajustes para?".format(
+                text="Which module would you like to check {}'s settings for?".format(
                     chat_name
                 ),
                 reply_markup=InlineKeyboardMarkup(
@@ -439,8 +439,8 @@ def send_settings(chat_id, user_id, user=False):
         else:
             dispatcher.bot.send_message(
                 user_id,
-                "Parece que no hay ninguna configuración de chat disponible :'(\nEnvía esto "
-                "en un chat grupal en el que eres administrador para encontrar su configuración actual!",
+                "Seems like there aren't any chat settings available :'(\nSend this "
+                "in a group chat you're admin in to find its current settings!",
                 parse_mode=ParseMode.MARKDOWN,
             )
 
@@ -458,7 +458,7 @@ def settings_button(update: Update, context: CallbackContext):
             chat_id = mod_match.group(1)
             module = mod_match.group(2)
             chat = bot.get_chat(chat_id)
-            text = "*{}* tiene la siguiente configuración para el *{}* modulo:\n\n".format(
+            text = "*{}* has the following settings for the *{}* module:\n\n".format(
                 escape_markdown(chat.title), CHAT_SETTINGS[module].__mod_name__
             ) + CHAT_SETTINGS[module].__chat_settings__(chat_id, user.id)
             query.message.reply_text(
@@ -468,7 +468,7 @@ def settings_button(update: Update, context: CallbackContext):
                     [
                         [
                             InlineKeyboardButton(
-                                text="Atras",
+                                text="Back",
                                 callback_data="stngs_back({})".format(chat_id),
                             )
                         ]
@@ -481,8 +481,8 @@ def settings_button(update: Update, context: CallbackContext):
             curr_page = int(prev_match.group(2))
             chat = bot.get_chat(chat_id)
             query.message.reply_text(
-                "¡Hola! Hay bastantes configuraciones para {} - Adelante, elige lo que "
-                "te interesa.".format(chat.title),
+                "Hi there! There are quite a few settings for {} - go ahead and pick what "
+                "you're interested in.".format(chat.title),
                 reply_markup=InlineKeyboardMarkup(
                     paginate_modules(
                         curr_page - 1, CHAT_SETTINGS, "stngs", chat=chat_id
@@ -495,8 +495,8 @@ def settings_button(update: Update, context: CallbackContext):
             next_page = int(next_match.group(2))
             chat = bot.get_chat(chat_id)
             query.message.reply_text(
-                "¡Hola! Hay bastantes configuraciones para {} - Adelante, elige lo que "
-                "te interesa.".format(chat.title),
+                "Hi there! There are quite a few settings for {} - go ahead and pick what "
+                "you're interested in.".format(chat.title),
                 reply_markup=InlineKeyboardMarkup(
                     paginate_modules(
                         next_page + 1, CHAT_SETTINGS, "stngs", chat=chat_id
@@ -508,8 +508,8 @@ def settings_button(update: Update, context: CallbackContext):
             chat_id = back_match.group(1)
             chat = bot.get_chat(chat_id)
             query.message.reply_text(
-                text="¡Hola! Hay bastantes configuraciones para {} - Adelante, elige lo que "
-                "te interesa.".format(escape_markdown(chat.title)),
+                text="Hi there! There are quite a few settings for {} - go ahead and pick what "
+                "you're interested in.".format(escape_markdown(chat.title)),
                 parse_mode=ParseMode.MARKDOWN,
                 reply_markup=InlineKeyboardMarkup(
                     paginate_modules(0, CHAT_SETTINGS, "stngs", chat=chat_id)
@@ -536,7 +536,7 @@ def get_settings(update: Update, context: CallbackContext):
     # ONLY send settings in PM
     if chat.type != chat.PRIVATE:
         if is_user_admin(chat, user.id):
-            text = "Haga clic aquí para obtener la configuración de este chat, así como la suya."
+            text = "Click here to get this chat's settings, as well as yours."
             msg.reply_text(
                 text,
                 reply_markup=InlineKeyboardMarkup(
@@ -553,7 +553,7 @@ def get_settings(update: Update, context: CallbackContext):
                 ),
             )
         else:
-            text = "Haga clic aquí para verificar su configuración."
+            text = "Click here to check your settings."
 
     else:
         send_settings(chat.id, user.id, True)
