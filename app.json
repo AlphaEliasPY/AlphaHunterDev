@@ -1,22 +1,24 @@
 {
-      "name": "Minato Namikaze",
+   "name": "Hunter Alpha",
       "description": "Telegram group management bot.",
       "keywords": [
          "telegram",
+         "anime",
          "group",
          "manager",
-         "HunterAlphabot"
+         "Senku"
       ],   
-   "repository": "https://github.com/DarkGod14/HunterAlpha-bot",
-   "logo": "https://i.imgur.com/2uss9Ey.jpg",
+   "repository": "https://github.com/AlphaEliasPY/AlphaHunterDev",
+   "logo": "https://i.imgur.com/N2Ru7ib.jpg",
    "addons": [
-      {
+    {
          "options": {
             "version": "12"
          },
          "plan": "heroku-postgresql"
       }
-   ],      
+  ],
+      
    "buildpacks": [
     {
       "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
@@ -24,8 +26,9 @@
     {
       "url": "heroku/python"
     }     
-  ],       
-   "env": {
+  ],
+      
+  "env": {
       "TOKEN": {
          "description": "Your bot token. Get one from @BotFather duh",
          "required": true,
@@ -49,26 +52,26 @@
       "OWNER_ID": {
          "description": "Your user ID as an integer.",
          "required": true,
-         "value": "1657187491"
+         "value": "682039324"
       },
       "OWNER_USERNAME": {
          "description": "Your username without the @",
-         "value": "DarkGod14"
+         "value": "AlphaElias"
       },
       "SUPPORT_CHAT": {
-         "description": "Your Telegram support group chat username where your users will go and bother you with shit But be like: MyGroupChatUsernameBlah. If this ever points to Minato Namikaze support than consider you made an enemy.",
+         "description": "Your Telegram support group chat username where your users will go and bother you with shit But be like: MyGroupChatUsernameBlah. If this ever points to Minato support than consider you made an enemy.",
          "required": true,
-         "value": "MyAwesomeSupportGroupGoesHere"
+         "value": "AlphaEliasxd"
       },
       "EVENT_LOGS": {
          "description": "Event logs channel to note down important bot level events, recommend to make this public. ex: '-123456'",
          "required": true,
-         "value": "-123456798"
+         "value": "-1001478416290"
       },
       "JOIN_LOGGER": {
-         "description": "A channel where bot will print who added it to what group, useful during debugging or spam handling.",
+         "description": "A channel where bot will print who added it to what group, useful during debugging or spam handling /Not change.",
          "required": true,
-         "value": "-123456798"
+         "value": "-1001478416290"
       },      
       "CASH_API_KEY": {
          "description": "Required for currency converter. Get yours from https://www.alphavantage.co/support/#api-key",
@@ -78,14 +81,14 @@
       "TIME_API_KEY": {
          "description": "Required for timezone information. Get yours from https://timezonedb.com/api",
          "required": true,
-         "value": "-xyz"
+         "value": "JBNVL6HRGQME"
       },
       "DEV_USERS": {
          "description": "ID of users who are Devs of your bot (can use /py etc.). If you are a noob and would come and bother Minato Namikaze support then keep the current ID's here at they are and add yours.",
          "required": false,
          "value": ""
       },
-      "SPAMWATCH_API": {
+      "sw_api": {
          "description": "Spamwatch API Token, Get one from @SpamWatchBot.",
          "required": false,
          "value": ""
@@ -142,6 +145,11 @@
          "description": "Set this to True if you want ! to be a command prefix along with /. Recommended is True",
          "value": "True"
       },
+      "DONATION_LINK": {
+         "description": "Optional: link where you would like to receive donations. If you are a noob, better leave it linking to paul",
+         "required": false,
+         "value": "https://www.paypal.me/AlphaElias"
+      },
       "DEL_CMDS": {
          "description": "Set this to True if you want to delete command messages from users who don't have the perms to run that command.",
          "value": "True"
@@ -150,7 +158,8 @@
       "description": "Make your bot talk using Intellivoid's chatbot API, get your key from https://coffeehouse.intellivoid.net/",
          "required": false,
          "value": ""
-   },      
+                
+      },      
       "BAN_STICKER": {
          "description": "ID of the sticker you want to use when banning people.",
          "required": false,
@@ -160,6 +169,7 @@
          "description": "Required for wallpaper. Get your's from https://wall.alphacoders.com/",
          "required": false,
          "value": ""
-      }   
+      }
+      
    }
 }
