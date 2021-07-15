@@ -28,7 +28,7 @@ async def _(event):
             )
             end = datetime.now()
             ms = (end - start).seconds
-            h = await event.reply("Downloaded to {} in {} seconds.".format(downloaded_file_name, ms))
+            h = await event.reply("Descargadoen {} en {} segundos.".format(downloaded_file_name, ms))
             if downloaded_file_name.endswith((".webp")):
                 resize_image(downloaded_file_name)
             try:
@@ -41,7 +41,7 @@ async def _(event):
                 end = datetime.now()
                 ms_two = (end - start).seconds
                 os.remove(downloaded_file_name)
-                await h.edit("Uploaded to https://telegra.ph{})".format(media_urls[0]), link_preview=True)
+                await h.edit("Subido a https://telegra.ph{})".format(media_urls[0]), link_preview=True)
         elif input_str == "xt":
             user_object = await tbot.get_entity(r_message.sender_id)
             title_of_page = user_object.first_name # + " " + user_object.last_name
@@ -69,9 +69,9 @@ async def _(event):
             )
             end = datetime.now()
             ms = (end - start).seconds
-            await event.reply("Pasted to https://telegra.ph/{} in {} seconds.".format(response["path"], ms), link_preview=True)
+            await event.reply("Pegado a https://telegra.ph/{} en {} segundos.".format(response["path"], ms), link_preview=True)
     else:
-        await event.reply("Reply to a message to get a permanent telegra.ph link.")
+        await event.reply("Responde a un mensaje para obtener un enlace telegra.ph permanente.")
 
 
 def resize_image(image):
@@ -80,9 +80,9 @@ def resize_image(image):
 
 
 __help__ = """
-I can upload files to Telegraph
-• `/tm` *:*Get Telegraph Link Of Replied Media
-• `/txt`*:*Get Telegraph Link of Replied Text
+Puedo subir archivos a Telegraph
+• `/tm` *:*Obtenga el enlace telegráfico de los medios respondidos
+• `/txt`*:*Obtener enlace telegráfico del texto respondido
 """
 
 __mod_name__ = "Telegraph"
