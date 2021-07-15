@@ -26,7 +26,7 @@ def magisk(update: Update, context: CallbackContext):
         "*Stable*": "stable.json",
         "\n" "*Canary*": "canary.json",
     }.items()
-    msg = "*Latest Magisk Releases:*\n\n"
+    msg = "*Últimos lanzamientos de Magisk:*\n\n"
     for magisk_type, release_url in magisk_dict:
         data = get(link + release_url).json()
         msg += (
@@ -59,26 +59,26 @@ def checkfw(update: Update, context: CallbackContext):
         )
 
         if fota.status_code != 200:
-            msg = f"Couldn't check for {temp.upper()} and {csc.upper()}, please refine your search or try again later!"
+            msg = f"No se pudo verificar {temp.upper()} y {csc.upper()}, refina tu búsqueda o vuelve a intentarlo más tarde!"
 
         else:
             page = BeautifulSoup(fota.content, 'lxml')
             os = page.find("latest").get("o")
 
             if page.find("latest").text.strip():
-                msg = f'*Latest released firmware for {model.upper()} and {csc.upper()} is:*\n'
+                msg = f'*Firmware lanzado más reciente para {model.upper()} y {csc.upper()} es:*\n'
                 pda, csc, phone = page.find("latest").text.strip().split('/')
                 msg += f'• PDA: `{pda}`\n• CSC: `{csc}`\n'
                 if phone:
-                    msg += f'• Phone: `{phone}`\n'
+                    msg += f'• Movil: `{phone}`\n'
                 if os:
                     msg += f'• Android: `{os}`\n'
                 msg += ''
             else:
-                msg = f'*No public release found for {model.upper()} and {csc.upper()}.*\n\n'
+                msg = f'*No se encontró ningún comunicado público para {model.upper()} y {csc.upper()}.*\n\n'
 
     else:
-        msg = 'Give me something to fetch, like:\n`/checkfw SM-N975F DBT`'
+        msg = 'Dame algo para traer, como:\n`/checkfw SM-N975F DBT`'
 
     delmsg = message.reply_text(
         text = msg,
@@ -106,7 +106,7 @@ def getfw(update: Update, context: CallbackContext):
         )
 
         if fota.status_code != 200:
-            msg = f"Couldn't check for {temp.upper()} and {csc.upper()}, please refine your search or try again later!"
+            msg = f"No se pudo verificar {temp.upper()} y {csc.upper()}, refina tu búsqueda o vuelve a intentarlo más tarde!"
 
         else:
             url1 = f'https://samfrew.com/model/{model.upper()}/region/{csc.upper()}/'
@@ -121,20 +121,20 @@ def getfw(update: Update, context: CallbackContext):
             msg = ""
             if page.find("latest").text.strip():
                 pda, csc2, phone = page.find("latest").text.strip().split('/')
-                msg += f'*Latest firmware for {model.upper()} and {csc.upper()} is:*\n'
+                msg += f'*Firmware más reciente para {model.upper()} and {csc.upper()} is:*\n'
                 msg += f'• PDA: `{pda}`\n• CSC: `{csc2}`\n'
                 if phone:
-                    msg += f'• Phone: `{phone}`\n'
+                    msg += f'• Movil: `{phone}`\n'
                 if os:
                     msg += f'• Android: `{os}`\n'
             msg += '\n'
-            msg += f'*Downloads for {model.upper()} and {csc.upper()}*\n'
+            msg += f'*Descargas para {model.upper()} and {csc.upper()}*\n'
             btn = [[InlineKeyboardButton(text=f"samfrew.com", url = url1)]]
             btn += [[InlineKeyboardButton(text=f"sammobile.com", url = url2)]]
             btn += [[InlineKeyboardButton(text=f"sfirmware.com", url = url3)]]
             btn += [[InlineKeyboardButton(text=f"samfw.com", url = url4)]]
     else:
-        msg = 'Give me something to fetch, like:\n`/getfw SM-N975F DBT`'
+        msg = 'Dame algo para traer, como:\n`/getfw SM-N975F DBT`'
 
     delmsg = message.reply_text(
         text = msg,
@@ -180,7 +180,7 @@ def miui(update: Update, context: CallbackContext):
         data = [i for i in yaml_data if device in i['codename']]
 
         if not data:
-            msg = f"Miui is not avaliable for {device}"
+            msg = f"Miui no está disponible para {device}"
         else:
             for fw in data:
                 av = fw['android']
@@ -196,9 +196,9 @@ def miui(update: Update, context: CallbackContext):
             device = fname.split(" ")
             device.pop()
             device = " ".join(device)
-            msg = f"The latest firmwares for the *{device}* are:"
+            msg = f"Los últimos firmwares para *{device}* estan:"
     else:
-        msg = 'Give me something to fetch, like:\n`/miui whyred`'
+        msg = 'Dame algo para traer, como:\n`/miui whyred`'
 
     delmsg = message.reply_text(
         text = msg,
@@ -223,7 +223,7 @@ def orangefox(update: Update, context: CallbackContext):
         link = get(f"https://api.orangefox.download/v3/releases/?codename={device}&sort=date_desc&limit=1")
 
         if link.status_code == 404:
-            msg = f"OrangeFox recovery is not avaliable for {device}"
+            msg = f"La recuperación de OrangeFox no está disponible para {device}"
         else:
             page = loads(link.content)
             file_id = page["data"][0]["_id"]
@@ -243,7 +243,7 @@ def orangefox(update: Update, context: CallbackContext):
             dl_link = page["mirrors"]["DL"]
             date = datetime.fromtimestamp(page["date"])
             md5 = page["md5"]
-            msg = f"*Latest OrangeFox Recovery for the {full_name}*\n\n"
+            msg = f"*La última recuperación de OrangeFox para {full_name}*\n\n"
             msg += f"• Manufacturer: `{oem}`\n"
             msg += f"• Model: `{model}`\n"
             msg += f"• Codename: `{device}`\n"
@@ -255,9 +255,9 @@ def orangefox(update: Update, context: CallbackContext):
             msg += f"• Date: `{date}`\n"
             msg += f"• File: `{dl_file}`\n"
             msg += f"• MD5: `{md5}`\n"
-            btn = [[InlineKeyboardButton(text=f"Download", url = dl_link)]]
+            btn = [[InlineKeyboardButton(text=f"Descargar", url = dl_link)]]
     else:
-        msg = 'Give me something to fetch, like:\n`/orangefox a3y17lte`'
+        msg = 'Dame algo para traer, like:\n`/orangefox a3y17lte`'
 
     delmsg = message.reply_text(
         text = msg,
@@ -282,7 +282,7 @@ def twrp(update: Update, context: CallbackContext):
         link = get(f"https://eu.dl.twrp.me/{device}")
 
         if link.status_code == 404:
-            msg = f"TWRP is not avaliable for {device}"
+            msg = f"TWRP no está disponible para {device}"
         else:
             page = BeautifulSoup(link.content, "lxml")
             download = page.find("table").find("tr").find("a")
@@ -290,13 +290,13 @@ def twrp(update: Update, context: CallbackContext):
             dl_file = download.text
             size = page.find("span", {"class": "filesize"}).text
             date = page.find("em").text.strip()
-            msg = f"*Latest TWRP for the {device}*\n\n"
+            msg = f"*Último TWRP para {device}*\n\n"
             msg += f"• Size: `{size}`\n"
             msg += f"• Date: `{date}`\n"
             msg += f"• File: `{dl_file}`\n\n"
-            btn = [[InlineKeyboardButton(text=f"Download", url = dl_link)]]
+            btn = [[InlineKeyboardButton(text=f"Descargar", url = dl_link)]]
     else:
-        msg = 'Give me something to fetch, like:\n`/twrp a3y17lte`'
+        msg = 'Dame algo para traer, como:\n`/twrp a3y17lte`'
 
     delmsg = message.reply_text(
         text = msg,
@@ -312,20 +312,20 @@ def twrp(update: Update, context: CallbackContext):
 
 
 __help__ = """
-*Available commands:*\n
+*Comandos disponibles:*\n
 *Magisk:* 
-• `/magisk`, `/su`, `/root`: fetches latest magisk\n
-*OrangeFox Recovery Project:* 
-• `/orangefox` `<devicecodename>`: fetches lastest OrangeFox Recovery available for a given device codename\n
+• `/magisk`, `/su`, `/root`: obtiene el último magisk\n
+*Proyecto de recovery OrangeFox:* 
+• `/orangefox` `<nombre de dispositivo>`: obtiene la última recuperación de OrangeFox disponible para un nombre en clave de dispositivo dado\n
 *TWRP:* 
-• `/twrp <devicecodename>`: fetches lastest TWRP available for a given device codename\n
+• `/twrp <nombre de dispositivo>`: obtiene el TWRP más reciente disponible para un nombre en clave de dispositivo dado\n
 *MIUI:*
-• `/miui <devicecodename>`- fetches latest firmware info for a given device codename\n
+• `/miui <nombre de dispositivo>`- obtiene la información de firmware más reciente para un nombre en clave de dispositivo dado\n
 *Phh:* 
-• `/phh`: get lastest phh builds from github\n
+• `/phh`: obtener las últimas compilaciones de phh de github\n
 *Samsung:*
-• `/checkfw <model> <csc>` - Samsung only - shows the latest firmware info for the given device, taken from samsung servers
-• `/getfw <model> <csc>` - Samsung only - gets firmware download links from samfrew, sammobile and sfirmwares for the given device
+• `/checkfw <modelo> <csc>` - Samsung solamente - muestra la información de firmware más reciente para el dispositivo dado, tomada de los servidores de Samsung
+• `/getfw <modelo> <csc>` - Samsung solamente - obtiene enlaces de descarga de firmware de samfrew, sammobile y sfirmwares para el dispositivo dado
 """
 
 MAGISK_HANDLER = CommandHandler(["magisk", "root", "su"], magisk, run_async=True)
