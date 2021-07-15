@@ -53,10 +53,10 @@ async def _(event):
         return
     if event.is_group:
      if not (await is_register_admin(event.input_chat, event.message.sender_id)):
-       await event.reply(" Yoo.. You are not admin..  You can't use this command.. But you can use in my pm")
+       await event.reply("Yoo .. No eres administrador .. No puedes usar este comando .. Pero puedes usarlo en mi pm")
        return
     # SHOW_DESCRIPTION = False
-    catevent = await event.reply("`searching........`")
+    catevent = await event.reply("`buscando........`")
     match = event.pattern_match.group(1)
     page = re.findall(r"page=\d+", match)
     try:
@@ -78,7 +78,7 @@ async def _(event):
         except IndexError:
             break
     await catevent.edit(
-        "**Search Query:**\n`" + match + "`\n\n**Results:**\n" + msg, link_preview=False
+        "**Consulta de busqueda:**\n`" + match + "`\n\n**Resultados:**\n" + msg, link_preview=False
     )
 
 
@@ -114,7 +114,7 @@ opener.addheaders = [("User-agent", useragent)]
 
 @register(pattern=r"^/reverse(?: |$)(\d*)")
 async def okgoogle(img):
-    """ For .reverse command, Google search images and stickers. """
+    """ Para el comando .reverse, imágenes de búsqueda de Google y pegatinas. """
     if os.path.isfile("okgoogle.png"):
         os.remove("okgoogle.png")
     
@@ -123,15 +123,15 @@ async def okgoogle(img):
         photo = io.BytesIO()
         await tbot.download_media(message, photo)
     else:
-        await img.reply("`Reply to photo or sticker nigger.`")
+        await img.reply("`Responder a la foto o pegatina.`")
         return
 
     if photo:
-        dev = await img.reply("`Processing...`")
+        dev = await img.reply("`Procesando...`")
         try:
             image = Image.open(photo)
         except OSError:
-            await dev.edit("`Unsupported sexuality, most likely.`")
+            await dev.edit("`Sexualidad sin apoyo, muy probablemente.`")
             return
         name = "okgoogle.png"
         image.save(name, "PNG")
@@ -144,11 +144,11 @@ async def okgoogle(img):
 
         if response != 400:
             await dev.edit(
-                "`Image successfully uploaded to Google. Maybe.`"
-                "\n`Parsing source now. Maybe.`"
+                "`Imagen cargada correctamente en Google. Quizás.`"
+                "\n`Analizando la fuente ahora. Quizás.`"
             )
         else:
-            await dev.edit("`Google told me to fuck off.`")
+            await dev.edit("`Google me dijo que me fuera a la mierda.`")
             return
 
         os.remove(name)
@@ -159,7 +159,7 @@ async def okgoogle(img):
         if guess and imgspage:
             await dev.edit(f"[{guess}]({fetchUrl})\n\n`Looking for this Image...`")
         else:
-            await dev.edit("`Can't find this piece of shit.`")
+            await dev.edit("`No puedo encontrar este pedazo de mierda.`")
             return
 
         if img.pattern_match.group(1):
@@ -278,21 +278,21 @@ async def apk(e):
             + "</a>"
         )
         app_details += "\n<code>Rating :</code> " + app_rating.replace(
-            "Rated ", "⭐ "
+            "Calificacion ", "⭐ "
         ).replace(" out of ", "/").replace(" stars", "", 1).replace(
-            " stars", "⭐ "
+            " estrellas", "⭐ "
         ).replace(
-            "five", "5"
+            "cinco", "5"
         )
         app_details += (
             "\n<code>Features :</code> <a href='"
             + app_link
             + "'>View in Play Store</a>"
         )
-        app_details += "\n\nby @NamikazeMinato_bot"
+        app_details += "\n\nby @xxXhunteralphaX_Bot"
         await e.reply(app_details, link_preview=True, parse_mode="HTML")
     except IndexError:
-        await e.reply("No result found in search. Please enter **Valid app name**")
+        await e.reply("No se encontraron resultados en la búsqueda. Ingrese **Nombre de aplicación válido**")
     except Exception as err:
         await e.reply("Exception Occured:- " + str(err))
 
@@ -300,8 +300,8 @@ async def apk(e):
 __mod_name__ = "Google"
 
 __help__ = """
-• `/google` `<text>`*:* Perform a google search
-• `/img` `<text>`*:* Search Google for images and returns them\nFor greater no. of results specify lim, For eg: `/img hello lim=10`
-• `/app` `<appname>`*:* Searches for an app in Play Store and returns its details.
-• `/reverse`*:* Does a reverse image search of the media which it was replied to.
+• `/google` `<texto>`*:* Realizar una búsqueda en google
+• `/img` `<texto>`*:* Busca imágenes en Google y las devuelve\nPara un número mayor. de los resultados especifique lim, por ejemplo: `/img hola lim = 10`
+• `/app` `<nombre de app>`*:* Busca una aplicación en Play Store y devuelve sus detalles..
+• `/reverse`*:* Realiza una búsqueda inversa de imágenes de los medios a los que se respondió.
 """
