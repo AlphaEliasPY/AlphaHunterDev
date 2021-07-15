@@ -51,48 +51,48 @@ def clearcmd(update: Update, context: CallbackContext):
     if len(args) == 0:
         commands = sql.get_allclearcmd(chat.id)
         if commands:
-            msg += "*Command - Time*\n"
+            msg += "*Comando - Tiempo*\n"
             for cmd in commands:
                 msg += f"`{cmd.cmd} - {cmd.time} secs`\n"  
         else:
-            msg = f"No deletion time has been set for any command in *{chat.title}*"
+            msg = f"No se ha establecido un tiempo de eliminación para ningún comando en *{chat.title}*"
 
     elif len(args) == 1:
         cmd = args[0].lower()
         if cmd == "list":
-            msg = "The commands available are:\n"
+            msg = "Los comandos disponibles son:\n"
             for cmd in commands:
                 msg += f"• `{cmd}`\n"
         elif cmd == "restore":
             delcmd = sql.del_allclearcmd(chat.id)
-            msg = "Removed all commands from list"
+            msg = "Se eliminaron todos los comandos de la lista."
         else:
             cmd = sql.get_clearcmd(chat.id, cmd)
             if cmd:
-                msg = f"`{cmd.cmd}` output is set to be deleted after *{cmd.time}* seconds in *{chat.title}*"
+                msg = f"`{cmd.cmd}` la salida está configurada para ser eliminada después *{cmd.time}* segundos en *{chat.title}*"
             else:
                 if cmd not in commands:
-                    msg = "Invalid command. Check module help for more details"
+                    msg = "Comando inválido. Consulte la ayuda del módulo para obtener más detalles"
                 else:
-                    msg = f"This command output hasn't been set to be deleted in *{chat.title}*"
+                    msg = f"Esta salida de comando no se ha configurado para eliminarse en *{chat.title}*"
 
     elif len(args) == 2:
         cmd = args[0].lower()
         time = args[1]
         if cmd in commands:
-            if time == "restore":
+            if time == "restaurar":
                 sql.del_clearcmd(chat.id, cmd)
-                msg = f"Removed `{cmd}` from list"
+                msg = f"Removido `{cmd}` from list"
             elif (5 <= int(time) <= 300):
                 sql.set_clearcmd(chat.id, cmd, time)
-                msg = f"`{cmd}` output will be deleted after *{time}* seconds in *{chat.title}*"
+                msg = f"`{cmd}` la salida se eliminará después *{time}* segundos en *{chat.title}*"
             else:
-               msg = "Time must be between 5 and 300 seconds"
+               msg = "El tiempo debe estar entre 5 y 300 segundos."
         else:
-            msg = "Specify a valid command. Use `/clearcmd list` to see available commands"
+            msg = "Especifique un comando válido. Utilice `/clearcmd list` para ver los comandos disponibles"
                 
     else:
-        msg = "I don't understand what are you trying to do. Check module help for more details"
+        msg = "No entiendo qué estás tratando de hacer. Consulte la ayuda del módulo para obtener más detalles"
 
     message.reply_text(
         text = msg,
@@ -105,23 +105,23 @@ def __migrate__(old_chat_id, new_chat_id):
 
 
 __help__ = """
-*Get module configuration:*
-• `/clearcmd`: provides all commands that has been set in current group with their deletion time
-• `/clearcmd list`: list all available commands for this module
-• `/clearcmd <command>`: get the deletion time for a specific `<command>`
+*Obtener la configuración del módulo:*
+• `/clearcmd`: proporciona todos los comandos que se han configurado en el grupo actual con su tiempo de eliminación
+• `/clearcmd list`: enumerar todos los comandos disponibles para este módulo
+• `/clearcmd <commando>`: obtener el tiempo de eliminación para un `<comando> específico`
 
-*Set module configuration:*
-• `/clearcmd <command> <time>`: set a deletion `<time>` for a specific `<command>` in current group. All outputs of that command will be deleted in that group after time value in seconds. Time can be set between 5 and 300 seconds
+*Establecer la configuración del módulo:*
+• `/clearcmd <comando> <tiempo>`: set a deletion `<time>` para un `<comando>` específico en el grupo actual. Todas las salidas de ese comando se eliminarán en ese grupo después del valor de tiempo en segundos. El tiempo se puede configurar entre 5 y 300 segundos.
 
-*Restore module configuration:*
-• `/clearcmd restore`: the deletion time set for ALL commands will be removed in current group
-• `/clearcmd <command> restore`: the deletion time set for a specific `<command>` will be removed in current group
+*Restaurar la configuración del módulo:*
+• `/clearcmd restore`: el tiempo de eliminación establecido para TODOS los comandos se eliminará en el grupo actual
+• `/clearcmd <comando> restore`: el tiempo de eliminación establecido para un `<comando>` específico se eliminará en el grupo actual
 """
 
 CLEARCMD_HANDLER = CommandHandler("clearcmd", clearcmd, run_async=True)
 
 dispatcher.add_handler(CLEARCMD_HANDLER)
 
-__mod_name__ = "Clear Commands"
+__mod_name__ = "limpiar-CMD"
 __command_list__ = ["clearcmd"]
 __handlers__ = [CLEARCMD_HANDLER]
