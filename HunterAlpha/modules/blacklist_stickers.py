@@ -34,7 +34,7 @@ def blackliststicker(update: Update, context: CallbackContext):
         chat_id = update.effective_chat.id
         chat_name = chat.title
 
-    sticker_list = "<b>Lista de pegatinas incluidas en la lista negra actualmente en{}:</b>\n".format(
+    sticker_list = "<b>Lista de pegatinas incluidas en la lista negra actualmente en {}:</b>\n".format(
         chat_name
     )
 
