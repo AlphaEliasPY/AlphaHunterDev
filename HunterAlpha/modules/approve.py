@@ -22,7 +22,7 @@ def approve(update: Update, context: CallbackContext):
     user_id = extract_user(message, args)
     if not user_id:
         message.reply_text(
-            "I don't know who you're talking about, you're going to need to specify a user!"
+            "No sé de quién estás hablando, necesitarás especificar un usuario!"
         )
         return ""
     try:
@@ -31,18 +31,18 @@ def approve(update: Update, context: CallbackContext):
         return ""
     if member.status == "administrator" or member.status == "creator":
         message.reply_text(
-            "User is already admin - locks, blocklists, and antiflood already don't apply to them."
+            "El usuario ya es administrador: los bloqueos, las listas de bloqueo y la protección contra Anti-inundaciones ya no se aplican a ellos."
         )
         return ""
     if sql.is_approved(message.chat_id, user_id):
         message.reply_text(
-            f"[{member.user['first_name']}](tg://user?id={member.user['id']}) is already approved in {chat_title}",
+            f"[{member.user['first_name']}](tg://user?id={member.user['id']}) ya está aprobado en {chat_title}",
             parse_mode=ParseMode.MARKDOWN,
         )
         return ""
     sql.approve(message.chat_id, user_id)
     message.reply_text(
-        f"[{member.user['first_name']}](tg://user?id={member.user['id']}) has been approved in {chat_title}! They will now be ignored by automated admin actions like locks, blocklists, and antiflood.",
+        f"[{member.user['first_name']}](tg://user?id={member.user['id']}) ha sido aprobado en {chat_title}! Ahora serán ignorados por acciones de administración automatizadas como bloqueos, listas de bloqueo y anti-inundación..",
         parse_mode=ParseMode.MARKDOWN,
     )
     log_message = (
@@ -66,7 +66,7 @@ def disapprove(update: Update, context: CallbackContext):
     user_id = extract_user(message, args)
     if not user_id:
         message.reply_text(
-            "I don't know who you're talking about, you're going to need to specify a user!"
+            "No sé de quién estás hablando, necesitarás especificar un usuario!"
         )
         return ""
     try:
@@ -74,14 +74,14 @@ def disapprove(update: Update, context: CallbackContext):
     except BadRequest:
         return ""
     if member.status == "administrator" or member.status == "creator":
-        message.reply_text("This user is an admin, they can't be unapproved.")
+        message.reply_text("Este usuario es un administrador, no puede ser desaprobado..")
         return ""
     if not sql.is_approved(message.chat_id, user_id):
-        message.reply_text(f"{member.user['first_name']} isn't approved yet!")
+        message.reply_text(f"{member.user['first_name']} aún no está aprobado!")
         return ""
     sql.disapprove(message.chat_id, user_id)
     message.reply_text(
-        f"{member.user['first_name']} is no longer approved in {chat_title}."
+        f"{member.user['first_name']} Ya no está aprobado en {chat_title}."
     )
     log_message = (
         f"<b>{html.escape(chat.title)}:</b>\n"
@@ -98,13 +98,13 @@ def approved(update: Update, context: CallbackContext):
     message = update.effective_message
     chat_title = message.chat.title
     chat = update.effective_chat
-    msg = "The following users are approved.\n"
+    msg = "Los siguientes usuarios están aprobados.\n"
     approved_users = sql.list_approved(message.chat_id)
     for i in approved_users:
         member = chat.get_member(int(i.user_id))
         msg += f"- `{i.user_id}`: {member.user['first_name']}\n"
-    if msg.endswith("approved.\n"):
-        message.reply_text(f"No users are approved in {chat_title}.")
+    if msg.endswith("aprobado.\n"):
+        message.reply_text(f"No hay usuarios aprobados en {chat_title}.")
         return ""
     else:
         message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
@@ -119,16 +119,16 @@ def approval(update: Update, context: CallbackContext):
     member = chat.get_member(int(user_id))
     if not user_id:
         message.reply_text(
-            "I don't know who you're talking about, you're going to need to specify a user!"
+            "No sé de quién estás hablando, necesitarás especificar un usuario!"
         )
         return ""
     if sql.is_approved(message.chat_id, user_id):
         message.reply_text(
-            f"{member.user['first_name']} is an approved user. Locks, antiflood, and blocklists won't apply to them."
+            f"{member.user['first_name']} es un usuario aprobado. Los bloqueos, anti-inundación y listas de bloqueo no se aplicarán a ellos."
         )
     else:
         message.reply_text(
-            f"{member.user['first_name']} is not an approved user. They are affected by normal commands."
+            f"{member.user['first_name']} no es un usuario aprobado. Se ven afectados por los comandos normales.."
         )
 
 
@@ -138,25 +138,25 @@ def unapproveall(update: Update, context: CallbackContext):
     member = chat.get_member(user.id)
     if member.status != "creator" and user.id not in SUDO_USERS:
         update.effective_message.reply_text(
-            "Only the chat owner can unapprove all users at once."
+            "Solo el propietario del chat puede desaprobar a todos los usuarios a la vez."
         )
     else:
         buttons = InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        text="Unapprove all users", callback_data="unapproveall_user"
+                        text="Desaprobar a todos los usuarios", callback_data="unapproveall_user"
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        text="Cancel", callback_data="unapproveall_cancel"
+                        text="Cancelar", callback_data="unapproveall_cancel"
                     )
                 ],
             ]
         )
         update.effective_message.reply_text(
-            f"Are you sure you would like to unapprove ALL users in {chat.title}? This action cannot be undone.",
+            f"Está seguro de que desea desaprobar a TODOS los usuarios en {chat.title}? su acción no se puede deshacer.",
             reply_markup=buttons,
             parse_mode=ParseMode.MARKDOWN,
         )
@@ -173,36 +173,36 @@ def unapproveall_btn(update: Update, context: CallbackContext):
             users = [int(i.user_id) for i in approved_users]
             for user_id in users:
                 sql.disapprove(chat.id, user_id)      
-            message.edit_text("Successfully Unapproved all user in this Chat.")
+            message.edit_text("Todos los usuarios de este chat no aprobados con éxito.")
             return
 
         if member.status == "administrator":
-            query.answer("Only owner of the chat can do this.")
+            query.answer("Solo el dueño del chat puede hacer esto..")
 
         if member.status == "member":
-            query.answer("You need to be admin to do this.")
+            query.answer("Necesitas ser administrador para hacer esto.")
     elif query.data == "unapproveall_cancel":
         if member.status == "creator" or query.from_user.id in SUDO_USERS:
-            message.edit_text("Removing of all approved users has been cancelled.")
+            message.edit_text("La eliminación de todos los usuarios aprobados ha sido cancelada.")
             return ""
         if member.status == "administrator":
-            query.answer("Only owner of the chat can do this.")
+            query.answer("Solo el dueño del chat puede hacer esto..")
         if member.status == "member":
-            query.answer("You need to be admin to do this.")
+            query.answer("Necesitas ser administrador para hacer esto.")
 
 
 __help__ = """
-Sometimes, you might trust a user not to send unwanted content.
-Maybe not enough to make them admin, but you might be ok with locks, blacklists, and antiflood not applying to them.
+A veces, puede confiar en que un usuario no enviará contenido no deseado.
+Tal vez no sea suficiente para convertirlos en administradores, pero es posible que no se apliquen bloqueos, listas negras y antiflood a ellos.
 
-That's what approvals are for - approve of trustworthy users to allow them to send 
+Para eso están las aprobaciones: aprobar a usuarios confiables para permitirles enviar 
 
-*Admin commands:*
-- `/approval`*:* Check a user's approval status in this chat.
-- `/approve`*:* Approve of a user. Locks, blacklists, and antiflood won't apply to them anymore.
-- `/unapprove`*:* Unapprove of a user. They will now be subject to locks, blacklists, and antiflood again.
-- `/approved`*:* List all approved users.
-- `/unapproveall`*:* Unapprove *ALL* users in a chat. This cannot be undone.
+*Comandos De Administrador:*
+- `/approval`*:* Verifique el estado de aprobación de un usuario en este chat.
+- `/approve`*:* Aprobación de un usuario. Las cerraduras, las listas negras y el anti-inundación ya no se les aplicarán.
+- `/unapprove`*:* No aprobar a un usuario. Ahora estarán sujetos a bloqueos, listas negras y antiinundación nuevamente..
+- `/approved`*:* Lista de todos los usuarios aprobados.
+- `/unapproveall`*:*vDesaprobar *TODOS* los usuarios en un chat. Esto no se puede deshacer.
 """
 
 APPROVE = DisableAbleCommandHandler("approve", approve, run_async=True)
@@ -219,6 +219,6 @@ dispatcher.add_handler(APPROVAL)
 dispatcher.add_handler(UNAPPROVEALL)
 dispatcher.add_handler(UNAPPROVEALL_BTN)
 
-__mod_name__ = "Approvals"
+__mod_name__ = "Aprobacion"
 __command_list__ = ["approve", "unapprove", "approved", "approval"]
 __handlers__ = [APPROVE, DISAPPROVE, APPROVED, APPROVAL]
