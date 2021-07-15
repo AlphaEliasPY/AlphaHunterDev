@@ -33,35 +33,35 @@ def bl_user(update: Update, context: CallbackContext) -> str:
     user_id, reason = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text("I doubt that's a user.")
+        message.reply_text("Dudo que sea un usuario.")
         return ""
 
     if user_id == bot.id:
-        message.reply_text("How am I supposed to do my work if I am ignoring myself?")
+        message.reply_text("¿Cómo se supone que debo hacer mi trabajo si me estoy ignorando?")
         return ""
 
     if user_id in BLACKLISTWHITELIST:
-        message.reply_text("No!\nNoticing super users is my job.")
+        message.reply_text("No!\nNotar a los superusuarios es mi trabajo.")
         return ""
 
     try:
         target_user = bot.get_chat(user_id)
     except BadRequest as excp:
-        if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user.")
+        if excp.message == "Usuario no encontrado":
+            message.reply_text("Parece que no puedo encontrar a este usuario.")
             return ""
         else:
             raise
 
     sql.blacklist_user(user_id, reason)
-    message.reply_text("I shall ignore the existence of this user!")
+    message.reply_text("Ignoraré la existencia de este usuario.!")
     log_message = (
         f"#BLACKLIST\n"
         f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
         f"<b>User:</b> {mention_html(target_user.id, html.escape(target_user.first_name))}"
     )
     if reason:
-        log_message += f"\n<b>Reason:</b> {reason}"
+        log_message += f"\n<b>Razon:</b> {reason}"
 
     return log_message
 
@@ -75,18 +75,18 @@ def unbl_user(update: Update, context: CallbackContext) -> str:
     user_id = extract_user(message, args)
 
     if not user_id:
-        message.reply_text("I doubt that's a user.")
+        message.reply_text("Dudo que sea un usuario.")
         return ""
 
     if user_id == bot.id:
-        message.reply_text("I always notice myself.")
+        message.reply_text("Siempre me doy cuenta de mi mismo.")
         return ""
 
     try:
         target_user = bot.get_chat(user_id)
     except BadRequest as excp:
-        if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user.")
+        if excp.message == "Usuario no encontrado":
+            message.reply_text("Parece que no puedo encontrar a este usuario.")
             return ""
         else:
             raise
@@ -94,7 +94,7 @@ def unbl_user(update: Update, context: CallbackContext) -> str:
     if sql.is_user_blacklisted(user_id):
 
         sql.unblacklist_user(user_id)
-        message.reply_text("*notices user*")
+        message.reply_text("*notifica al usuario*")
         log_message = (
             f"#UNBLACKLIST\n"
             f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
@@ -104,7 +104,7 @@ def unbl_user(update: Update, context: CallbackContext) -> str:
         return log_message
 
     else:
-        message.reply_text("I am not ignoring them at all though!")
+        message.reply_text("Sin embargo, no los estoy ignorando en absoluto.!")
         return ""
 
 
@@ -123,9 +123,9 @@ def bl_users(update: Update, context: CallbackContext):
         else:
             users.append(f"• {mention_html(user.id, html.escape(user.first_name))}")
 
-    message = "<b>Blacklisted Users</b>\n"
+    message = "<b>Usuarios incluidos en la lista negra</b>\n"
     if not users:
-        message += "Noone is being ignored as of yet."
+        message += "Nadie está siendo ignorado por el momento."
     else:
         message += "\n".join(users)
 
@@ -135,7 +135,7 @@ def bl_users(update: Update, context: CallbackContext):
 def __user_info__(user_id):
     is_blacklisted = sql.is_user_blacklisted(user_id)
 
-    text = "Blacklisted: <b>{}</b>"
+    text = "En la lista negra: <b>{}</b>"
     if user_id in [777000, 1087968824]:
         return ""
     if user_id == dispatcher.bot.id:
@@ -146,7 +146,7 @@ def __user_info__(user_id):
         text = text.format("Yes")
         reason = sql.get_reason(user_id)
         if reason:
-            text += f"\nReason: <code>{reason}</code>"
+            text += f"\nRazon: <code>{reason}</code>"
     else:
         text = text.format("No")
 
@@ -161,5 +161,5 @@ dispatcher.add_handler(BL_HANDLER)
 dispatcher.add_handler(UNBL_HANDLER)
 dispatcher.add_handler(BLUSERS_HANDLER)
 
-__mod_name__ = "Blacklisting Users"
+__mod_name__ = "Usuarios en lista negra"
 __handlers__ = [BL_HANDLER, UNBL_HANDLER, BLUSERS_HANDLER]
