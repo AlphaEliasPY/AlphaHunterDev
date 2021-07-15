@@ -438,7 +438,7 @@ def del_blackliststicker(update: Update, context: CallbackContext):
                     chat.kick_member(user.id, until_date=bantime)
                     bot.sendMessage(
                         chat.id,
-                        "{} Prohibido por {} por usar'{}' las pegatinas de la lista negraformat(
+                        "{} Prohibido por {} por usar '{}' las pegatinas de la lista negra".format(
                             mention_markdown(user.id, user.first_name), value, trigger
                         ),
                         parse_mode="markdown",
