@@ -30,14 +30,14 @@ def afk(update: Update, context: CallbackContext):
         reason = args[1]
         if len(reason) > 100:
             reason = reason[:100]
-            notice = "\nYour afk reason was shortened to 100 characters."
+            notice = "\nTu motivo de afk se redujo a 100 caracteres."
     else:
         reason = ""
 
     sql.set_afk(update.effective_user.id, reason)
     fname = update.effective_user.first_name
     try:
-        update.effective_message.reply_text("{} is now away!{}".format(fname, notice))
+        update.effective_message.reply_text("{} ahora está lejos!{}".format(fname, notice))
     except BadRequest:
         pass
 
@@ -56,14 +56,14 @@ def no_longer_afk(update: Update, context: CallbackContext):
         firstname = update.effective_user.first_name
         try:
             options = [
-                "{} is here!",
-                "{} is back!",
-                "{} is now in the chat!",
-                "{} is awake!",
-                "{} is back online!",
-                "{} is finally here!",
-                "Welcome back! {}",
-                "Where is {}?\nIn the chat!",
+                "{} Esta aquí!",
+                "{} Está de vuelta!",
+                "{} Está ahora en el chat!",
+                "{} Está despierto!",
+                "{} Está de vuelta en línea!",
+                "{} Finalmente esta aqui!",
+                "Bienvenido de nuevo! {}",
+                "Dónde está {}?\nEn el chat!",
             ]
             chosen_option = random.choice(options)
             update.effective_message.reply_text(chosen_option.format(firstname))
@@ -108,7 +108,7 @@ def reply_afk(update: Update, context: CallbackContext):
             try:
                 chat = bot.get_chat(user_id)
             except BadRequest:
-                print("Error: Could not fetch userid {} for AFK module".format(user_id))
+                print("Error: No se pudo recuperar el ID de usuario {} para módulo AFK".format(user_id))
                 return
             fst_name = chat.first_name
 
@@ -126,19 +126,19 @@ def check_afk(update, context, user_id, fst_name, userc_id):
         if int(userc_id) == int(user_id):
             return
         if not user.reason:
-            res = "{} is afk".format(fst_name)
+            res = "{} Esta afk".format(fst_name)
             update.effective_message.reply_text(res)
         else:
-            res = "{} is afk.\nReason: <code>{}</code>".format(
+            res = "{} Esta afk.\nRazon: <code>{}</code>".format(
                 html.escape(fst_name), html.escape(user.reason)
             )
             update.effective_message.reply_text(res, parse_mode="html")
 
 
 __help__ = """
- • `/afk <reason>`*:* mark yourself as AFK (away from keyboard).
- • `brb <reason>`*:* same as the afk command - but not a command.
-When marked as AFK, any mentions will be replied to with a message to say you're not available!
+ • `/afk <razon>`*:* marcarse a sí mismo como AFK (lejos del teclado).
+ • `brb <razon>`*:* Lo mismo que el comando afk - pero no un comando.
+Cuando se marca como AFK, cualquier mención será respondida con un mensaje para decirle que no está disponible.
 """
 
 AFK_HANDLER = DisableAbleCommandHandler("afk", afk, run_async=True)
