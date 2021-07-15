@@ -39,7 +39,7 @@ def blacklist(update: Update, context: CallbackContext):
         chat_id = update.effective_chat.id
         chat_name = chat.title
 
-    filter_list = "Current blacklisted words in <b>{}</b>:\n".format(chat_name)
+    filter_list = "Palabras actuales en la lista negra en <b>{}</b>:\n".format(chat_name)
 
     all_blacklisted = sql.get_chat_blacklist(chat_id)
 
@@ -55,12 +55,12 @@ def blacklist(update: Update, context: CallbackContext):
 
     split_text = split_message(filter_list)
     for text in split_text:
-        if filter_list == "Current blacklisted words in <b>{}</b>:\n".format(
+        if filter_list == "Palabras actuales en la lista negra en <b>{}</b>:\n".format(
             html.escape(chat_name)
         ):
             send_message(
                 update.effective_message,
-                "No blacklisted words in <b>{}</b>!".format(html.escape(chat_name)),
+                "No hay palabras en la lista negra en <b>{}</b>!".format(html.escape(chat_name)),
                 parse_mode=ParseMode.HTML,
             )
             return
@@ -97,7 +97,7 @@ def add_blacklist(update: Update, context: CallbackContext):
         if len(to_blacklist) == 1:
             send_message(
                 update.effective_message,
-                "Added blacklist <code>{}</code> in chat: <b>{}</b>!".format(
+                "Lista negra agregada <code>{}</code> en el chat: <b>{}</b>!".format(
                     html.escape(to_blacklist[0]), html.escape(chat_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -106,7 +106,7 @@ def add_blacklist(update: Update, context: CallbackContext):
         else:
             send_message(
                 update.effective_message,
-                "Added blacklist trigger: <code>{}</code> in <b>{}</b>!".format(
+                "Activador de lista negra agregado: <code>{}</code> en <b>{}</b>!".format(
                     len(to_blacklist), html.escape(chat_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -115,7 +115,7 @@ def add_blacklist(update: Update, context: CallbackContext):
     else:
         send_message(
             update.effective_message,
-            "Tell me which words you would like to add in blacklist.",
+            "Dime qué palabras te gustaría agregar a la lista negra..",
         )
 
 
@@ -153,7 +153,7 @@ def unblacklist(update: Update, context: CallbackContext):
             if successful:
                 send_message(
                     update.effective_message,
-                    "Removed <code>{}</code> from blacklist in <b>{}</b>!".format(
+                    "Removido <code>{}</code> de la lista negra en <b>{}</b>!".format(
                         html.escape(to_unblacklist[0]), html.escape(chat_name)
                     ),
                     parse_mode=ParseMode.HTML,
@@ -166,7 +166,7 @@ def unblacklist(update: Update, context: CallbackContext):
         elif successful == len(to_unblacklist):
             send_message(
                 update.effective_message,
-                "Removed <code>{}</code> from blacklist in <b>{}</b>!".format(
+                "Removido <code>{}</code> de la lista negra en <b>{}</b>!".format(
                     successful, html.escape(chat_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -175,15 +175,15 @@ def unblacklist(update: Update, context: CallbackContext):
         elif not successful:
             send_message(
                 update.effective_message,
-                "None of these triggers exist so it can't be removed.",
+                "Ninguno de estos desencadenantes existe, por lo que no se puede eliminar..",
                 parse_mode=ParseMode.HTML,
             )
 
         else:
             send_message(
                 update.effective_message,
-                "Removed <code>{}</code> from blacklist. {} did not exist, "
-                "so were not removed.".format(
+                "Removido <code>{}</code> de la lista negra. {} no existió, "
+                "entonces no fueron removidos.".format(
                     successful, len(to_unblacklist) - successful
                 ),
                 parse_mode=ParseMode.HTML,
@@ -191,7 +191,7 @@ def unblacklist(update: Update, context: CallbackContext):
     else:
         send_message(
             update.effective_message,
-            "Tell me which words you would like to remove from blacklist!",
+            "Dime qué palabras te gustaría eliminar de la lista negra.!",
         )
 
 
@@ -213,7 +213,7 @@ def blacklist_mode(update: Update, context: CallbackContext):
         if update.effective_message.chat.type == "private":
             send_message(
                 update.effective_message,
-                "This command can be only used in group not in PM",
+                "Este comando solo se puede usar en grupo, no en PM",
             )
             return ""
         chat = update.effective_chat
@@ -241,51 +241,51 @@ def blacklist_mode(update: Update, context: CallbackContext):
             sql.set_blacklist_strength(chat_id, 5, "0")
         elif args[0].lower() == "tban":
             if len(args) == 1:
-                teks = """It looks like you tried to set time value for blacklist but you didn't specified time; Try, `/blacklistmode tban <timevalue>`.
-				
-Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """Parece que intentó establecer el valor de tiempo para la lista negra pero no especificó el tiempo; Pruebe, `/ blacklistmode tban <valor de tiempo>`.
+
+Ejemplos de valor de tiempo: 4m = 4 minutos, 3h = 3 horas, 6d = 6 días, 5w = 5 semanas."""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return ""
             restime = extract_time(msg, args[1])
             if not restime:
-                teks = """Invalid time value!
-Example of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """Valor de tiempo no válido!
+Ejemplos de valor de tiempo: 4m = 4 minutos, 3h = 3 horas, 6d = 6 días, 5w = 5 semanas."""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return ""
-            settypeblacklist = "temporarily ban for {}".format(args[1])
+            settypeblacklist = "temporalmente prohibido por {}".format(args[1])
             sql.set_blacklist_strength(chat_id, 6, str(args[1]))
         elif args[0].lower() == "tmute":
             if len(args) == 1:
-                teks = """It looks like you tried to set time value for blacklist but you didn't specified  time; try, `/blacklistmode tmute <timevalue>`.
+                teks = """Parece que intentó establecer el valor de tiempo para la lista negra pero no especificó el tiempo; Pruebe, `/ blacklistmode tban <valor de tiempo>`.
 
-Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+Ejemplos de valor de tiempo: 4m = 4 minutos, 3h = 3 horas, 6d = 6 días, 5w = 5 semanas."""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return ""
             restime = extract_time(msg, args[1])
             if not restime:
-                teks = """Invalid time value!
-Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """Valor de tiempo no válido!
+Ejemplos de valor de tiempo: 4m = 4 minutos, 3h = 3 horas, 6d = 6 días, 5w = 5 semanas."""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return ""
-            settypeblacklist = "temporarily mute for {}".format(args[1])
+            settypeblacklist = "Temporalmente silenciado por {}".format(args[1])
             sql.set_blacklist_strength(chat_id, 7, str(args[1]))
         else:
             send_message(
                 update.effective_message,
-                "I only understand: off/del/warn/ban/kick/mute/tban/tmute!",
+                "Solo entiendo: off/del/warn/ban/kick/mute/tban/tmute!",
             )
             return ""
         if conn:
-            text = "Changed blacklist mode: `{}` in *{}*!".format(
+            text = "Modo de lista negra cambiado: `{}` en *{}*!".format(
                 settypeblacklist, chat_name
             )
         else:
-            text = "Changed blacklist mode: `{}`!".format(settypeblacklist)
+            text = "Modo de lista negra cambiado: `{}`!".format(settypeblacklist)
         send_message(update.effective_message, text, parse_mode="markdown")
         return (
             "<b>{}:</b>\n"
             "<b>Admin:</b> {}\n"
-            "Changed the blacklist mode. will {}.".format(
+            "Cambió el modo de lista negra. voluntad {}.".format(
                 html.escape(chat.title),
                 mention_html(user.id, html.escape(user.first_name)),
                 settypeblacklist,
@@ -310,11 +310,11 @@ Examples of time value: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks.
         elif getmode == 7:
             settypeblacklist = "temporarily mute for {}".format(getvalue)
         if conn:
-            text = "Current blacklistmode: *{}* in *{}*.".format(
+            text = "Modo de lista negra actual: *{}* en *{}*.".format(
                 settypeblacklist, chat_name
             )
         else:
-            text = "Current blacklistmode: *{}*.".format(settypeblacklist)
+            text = "Modo de lista negra actual: *{}*.".format(settypeblacklist)
         send_message(update.effective_message, text, parse_mode=ParseMode.MARKDOWN)
     return ""
 
@@ -359,7 +359,7 @@ def del_blacklist(update: Update, context: CallbackContext):
                     warn(
                         update.effective_user,
                         chat,
-                        ("Using blacklisted trigger: {}".format(trigger)),
+                        ("Usando un disparador en la lista negra: {}".format(trigger)),
                         message,
                         update.effective_user,
                     )
@@ -373,7 +373,7 @@ def del_blacklist(update: Update, context: CallbackContext):
                     )
                     bot.sendMessage(
                         chat.id,
-                        f"Muted {user.first_name} for using Blacklisted word: {trigger}!",
+                        f"Silenciado {user.first_name} por usar una palabra incluida en la lista negra: {trigger}!",
                     )
                     return
                 elif getmode == 4:
@@ -382,7 +382,7 @@ def del_blacklist(update: Update, context: CallbackContext):
                     if res:
                         bot.sendMessage(
                             chat.id,
-                            f"Kicked {user.first_name} for using Blacklisted word: {trigger}!",
+                            f"Expulsado {user.first_name} por usar una palabra incluida en la lista negra: {trigger}!",
                         )
                     return
                 elif getmode == 5:
@@ -390,7 +390,7 @@ def del_blacklist(update: Update, context: CallbackContext):
                     chat.kick_member(user.id)
                     bot.sendMessage(
                         chat.id,
-                        f"Banned {user.first_name} for using Blacklisted word: {trigger}",
+                        f"Prohibido {user.first_name} por usar una palabra incluida en la lista negra: {trigger}",
                     )
                     return
                 elif getmode == 6:
@@ -399,7 +399,7 @@ def del_blacklist(update: Update, context: CallbackContext):
                     chat.kick_member(user.id, until_date=bantime)
                     bot.sendMessage(
                         chat.id,
-                        f"Banned {user.first_name} until '{value}' for using Blacklisted word: {trigger}!",
+                        f"Prohibido {user.first_name} hasta '{value}' por usar una palabra incluida en la lista negra: {trigger}!",
                     )
                     return
                 elif getmode == 7:
@@ -413,12 +413,12 @@ def del_blacklist(update: Update, context: CallbackContext):
                     )
                     bot.sendMessage(
                         chat.id,
-                        f"Muted {user.first_name} until '{value}' for using Blacklisted word: {trigger}!",
+                        f"Silenciado {user.first_name} hasta '{value}' por usar una palabra incluida en la lista negra: {trigger}!",
                     )
                     return
             except BadRequest as excp:
-                if excp.message != "Message to delete not found":
-                    LOGGER.exception("Error while deleting blacklist message.")
+                if excp.message != "Mensaje para eliminar no encontrado":
+                    LOGGER.exception("Error al eliminar el mensaje de la lista negra.")
             break
 
 
@@ -435,40 +435,40 @@ def __migrate__(old_chat_id, new_chat_id):
 
 def __chat_settings__(chat_id, user_id):
     blacklisted = sql.num_blacklist_chat_filters(chat_id)
-    return "There are {} blacklisted words.".format(blacklisted)
+    return "Existen {} palabras en la lista negra.".format(blacklisted)
 
 
 def __stats__():
-    return "• {} blacklist triggers, across {} chats.".format(
+    return "• {} activadores de lista negra, en {} chats.".format(
         sql.num_blacklist_filters(), sql.num_blacklist_filter_chats()
     )
 
 
-__mod_name__ = "Blacklists"
+__mod_name__ = "Lista-negra"
 
 __help__ = """
 
-Blacklists are used to stop certain triggers from being said in a group. Any time the trigger is mentioned, the message will immediately be deleted. A good combo is sometimes to pair this up with warn filters!
+Las listas negras se utilizan para evitar que ciertos factores desencadenantes se digan en un grupo. Cada vez que se menciona el desencadenante, el mensaje se eliminará de inmediato. ¡Una buena combinación es a veces combinar esto con filtros de advertencia!
 
-*NOTE*: Blacklists do not affect group admins.
+*NOTA*: Las listas negras no afectan a los administradores de grupo.
 
- • `/blacklist`*:* View the current blacklisted words.
+ • `/blacklist`*:* Ver las palabras actuales de la lista negra.
 
-Admin only:
- • `/addblacklist <triggers>`*:* Add a trigger to the blacklist. Each line is considered one trigger, so using different lines will allow you to add multiple triggers.
- • `/unblacklist <triggers>`*:* Remove triggers from the blacklist. Same newline logic applies here, so you can remove multiple triggers at once.
- • `/blacklistmode <off/del/warn/ban/kick/mute/tban/tmute>`*:* Action to perform when someone sends blacklisted words.
+Solo Administradores:
+ • `/addblacklist <desencadenantes>`*:* Agrega un disparador a la lista negra. Cada línea se considera un disparador, por lo que el uso de diferentes líneas le permitirá agregar varios disparadores..
+ • `/unblacklist <desencadenantes>`*:* Elimina los desencadenantes de la lista negra. Aquí se aplica la misma lógica de nueva línea, por lo que puede eliminar varios activadores a la vez.
+ • `/blacklistmode <off/del/warn/ban/kick/mute/tban/tmute>`*:* Acción a realizar cuando alguien envía palabras de la lista negra.
 
-Blacklist sticker is used to stop certain stickers. Whenever a sticker is sent, the message will be deleted immediately.
-*NOTE:* Blacklist stickers do not affect the group admin
- • `/blsticker`*:* See current blacklisted sticker
-*Only admin:*
- • `/addblsticker <sticker link>`*:* Add the sticker trigger to the black list. Can be added via reply sticker
- • `/unblsticker <sticker link>`*:* Remove triggers from blacklist. The same newline logic applies here, so you can delete multiple triggers at once
- • `/rmblsticker <sticker link>`*:* Same as above
- • `/blstickermode <delete/ban/tban/mute/tmute>`*:* sets up a default action on what to do if users use blacklisted stickers
-Note:
- • `<sticker link>` can be `https://t.me/addstickers/<sticker>` or just `<sticker>` or reply to the sticker message
+La etiqueta de lista negra se utiliza para detener ciertas etiquetas. Siempre que se envíe una pegatina, el mensaje se eliminará de inmediato.
+*NOTA:* Las pegatinas de la lista negra no afectan al administrador del grupo
+ • `/blsticker`*:* Ver la pegatina actual incluida en la lista negra
+*Solo Adminisradores:*
+ • `/addblsticker <sticker link>`*:* Agregue el disparador de la etiqueta engomada a la lista negra. Se puede agregar a través de la etiqueta de respuesta
+ • `/unblsticker <sticker link>`*:* Elimina los desencadenantes de la lista negra. Aquí se aplica la misma lógica de nueva línea, por lo que puede eliminar varios activadores a la vez
+ • `/rmblsticker <sticker link>`*:* Lo mismo que arriba
+ • `/blstickermode <delete/ban/tban/mute/tmute>`*:* establece una acción predeterminada sobre qué hacer si los usuarios usan pegatinas en la lista negra
+Nota:
+ • `<enlace de pegatina> `puede ser` https://t.me/addstickers/ <sticker> `o simplemente` <sticker> `o responder al mensaje de la pegatina
 
 """
 BLACKLIST_HANDLER = DisableAbleCommandHandler(
