@@ -34,7 +34,7 @@ def blackliststicker(update: Update, context: CallbackContext):
         chat_id = update.effective_chat.id
         chat_name = chat.title
 
-    sticker_list = "<b>List blacklisted stickers currently in {}:</b>\n".format(
+    sticker_list = "<b>Lista de pegatinas incluidas en la lista negra actualmente en{}:</b>\n".format(
         chat_name
     )
 
@@ -49,12 +49,12 @@ def blackliststicker(update: Update, context: CallbackContext):
 
     split_text = split_message(sticker_list)
     for text in split_text:
-        if sticker_list == "<b>List blacklisted stickers currently in {}:</b>\n".format(
+        if sticker_list == "<b>Lista de pegatinas incluidas en la lista negra actualmente en {}:</b>\n".format(
             chat_name
         ).format(html.escape(chat_name)):
             send_message(
                 update.effective_message,
-                "There are no blacklist stickers in <b>{}</b>!".format(
+                "No hay pegatinas de lista negra en <b>{}</b>!".format(
                     html.escape(chat_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -97,7 +97,7 @@ def add_blackliststicker(update: Update, context: CallbackContext):
             except BadRequest:
                 send_message(
                     update.effective_message,
-                    "Sticker `{}` can not be found!".format(trigger),
+                    "Pegatina `{}` no pudo ser encontrado!".format(trigger),
                     parse_mode="markdown",
                 )
 
@@ -107,7 +107,7 @@ def add_blackliststicker(update: Update, context: CallbackContext):
         if len(to_blacklist) == 1:
             send_message(
                 update.effective_message,
-                "Sticker <code>{}</code> added to blacklist stickers in <b>{}</b>!".format(
+                "Pegatina <code>{}</code> añadido a las pegatinas de la lista negra en <b>{}</b>!".format(
                     html.escape(to_blacklist[0]), html.escape(chat_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -115,7 +115,7 @@ def add_blackliststicker(update: Update, context: CallbackContext):
         else:
             send_message(
                 update.effective_message,
-                "<code>{}</code> stickers added to blacklist sticker in <b>{}</b>!".format(
+                "<code>{}</code> pegatinas añadidas a la lista negra de pegatinas <b>{}</b>!".format(
                     added, html.escape(chat_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -124,7 +124,7 @@ def add_blackliststicker(update: Update, context: CallbackContext):
         added = 0
         trigger = msg.reply_to_message.sticker.set_name
         if trigger is None:
-            send_message(update.effective_message, "Sticker is invalid!")
+            send_message(update.effective_message, "La pegatina no es válida!")
             return
         try:
             get = bot.getStickerSet(trigger)
@@ -133,7 +133,7 @@ def add_blackliststicker(update: Update, context: CallbackContext):
         except BadRequest:
             send_message(
                 update.effective_message,
-                "Sticker `{}` can not be found!".format(trigger),
+                "Pegatina `{}` no pudo ser encontrado!".format(trigger),
                 parse_mode="markdown",
             )
 
@@ -142,7 +142,7 @@ def add_blackliststicker(update: Update, context: CallbackContext):
 
         send_message(
             update.effective_message,
-            "Sticker <code>{}</code> added to blacklist stickers in <b>{}</b>!".format(
+            "Pegatina <code>{}</code> añadido a las pegatinas de la lista negra en <b>{}</b>!".format(
                 trigger, html.escape(chat_name)
             ),
             parse_mode=ParseMode.HTML,
@@ -150,7 +150,7 @@ def add_blackliststicker(update: Update, context: CallbackContext):
     else:
         send_message(
             update.effective_message,
-            "Tell me what stickers you want to add to the blacklist.",
+            "Dime qué pegatinas quieres agregar a la lista negra..",
         )
 
 
@@ -189,20 +189,20 @@ def unblackliststicker(update: Update, context: CallbackContext):
             if successful:
                 send_message(
                     update.effective_message,
-                    "Sticker <code>{}</code> deleted from blacklist in <b>{}</b>!".format(
+                    "Pegatina <code>{}</code> eliminado de la lista negra en <b>{}</b>!".format(
                         html.escape(to_unblacklist[0]), html.escape(chat_name)
                     ),
                     parse_mode=ParseMode.HTML,
                 )
             else:
                 send_message(
-                    update.effective_message, "This sticker is not on the blacklist...!"
+                    update.effective_message, "Esta pegatina no está en la lista negra....!"
                 )
 
         elif successful == len(to_unblacklist):
             send_message(
                 update.effective_message,
-                "Sticker <code>{}</code> deleted from blacklist in <b>{}</b>!".format(
+                "Pegatina <code>{}</code> eliminado de la lista negra en <b>{}</b>!".format(
                     successful, html.escape(chat_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -211,14 +211,14 @@ def unblackliststicker(update: Update, context: CallbackContext):
         elif not successful:
             send_message(
                 update.effective_message,
-                "None of these stickers exist, so they cannot be removed.",
+                "Ninguna de estas pegatinas existe, por lo que no se pueden quitar..",
                 parse_mode=ParseMode.HTML,
             )
 
         else:
             send_message(
                 update.effective_message,
-                "Sticker <code>{}</code> deleted from blacklist. {} did not exist, so it's not deleted.".format(
+                "Pegatina <code>{}</code> eliminado de la lista negra. {} no existía, por lo que no se borra.".format(
                     successful, len(to_unblacklist) - successful
                 ),
                 parse_mode=ParseMode.HTML,
@@ -226,14 +226,14 @@ def unblackliststicker(update: Update, context: CallbackContext):
     elif msg.reply_to_message:
         trigger = msg.reply_to_message.sticker.set_name
         if trigger is None:
-            send_message(update.effective_message, "Sticker is invalid!")
+            send_message(update.effective_message, "La pegatina no es válida!")
             return
         success = sql.rm_from_stickers(chat_id, trigger.lower())
 
         if success:
             send_message(
                 update.effective_message,
-                "Sticker <code>{}</code> deleted from blacklist in <b>{}</b>!".format(
+                "Pegatina <code>{}</code> eliminado de la lista negra en<b>{}</b>!".format(
                     trigger, chat_name
                 ),
                 parse_mode=ParseMode.HTML,
@@ -241,12 +241,12 @@ def unblackliststicker(update: Update, context: CallbackContext):
         else:
             send_message(
                 update.effective_message,
-                "{} not found on blacklisted stickers...!".format(trigger),
+                "{} no se encuentra en las pegatinas de la lista negra...!".format(trigger),
             )
     else:
         send_message(
             update.effective_message,
-            "Tell me what stickers you want to add to the blacklist.",
+            "Dime qué pegatinas quieres agregar a la lista negra.",
         )
 
 
@@ -265,7 +265,7 @@ def blacklist_mode(update: Update, context: CallbackContext):
     else:
         if update.effective_message.chat.type == "private":
             send_message(
-                update.effective_message, "You can do this command in groups, not PM"
+                update.effective_message, "Puede hacer este comando en grupos, no PM"
             )
             return ""
         chat = update.effective_chat
@@ -293,39 +293,39 @@ def blacklist_mode(update: Update, context: CallbackContext):
             sql.set_blacklist_strength(chat_id, 5, "0")
         elif args[0].lower() == "tban":
             if len(args) == 1:
-                teks = """It looks like you are trying to set a temporary value to blacklist, but has not determined the time; use `/blstickermode tban <timevalue>`.
-                                          Examples of time values: 4m = 4 minute, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """Parece que está intentando establecer un valor temporal en la lista negra, pero no ha determinado la hora; use `/ blstickermode tban <valor de tiempo>`.
+                                           Ejemplos de valores de tiempo: 4m = 4 minutos, 3h = 3 horas, 6d = 6 días, 5w = 5 semanas."""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return
-            settypeblacklist = "temporary banned for {}".format(args[1])
+            settypeblacklist = "Prohibido temporalmente por {}".format(args[1])
             sql.set_blacklist_strength(chat_id, 6, str(args[1]))
         elif args[0].lower() == "tmute":
             if len(args) == 1:
-                teks = """It looks like you are trying to set a temporary value to blacklist, but has not determined the time; use `/blstickermode tmute <timevalue>`.
-                                          Examples of time values: 4m = 4 minute, 3h = 3 hours, 6d = 6 days, 5w = 5 weeks."""
+                teks = """Parece que está intentando establecer un valor temporal en la lista negra, pero no ha determinado la hora; use `/ blstickermode tban <valor de tiempo>`.
+                                           Ejemplos de valores de tiempo: 4m = 4 minutos, 3h = 3 horas, 6d = 6 días, 5w = 5 semanas.."""
                 send_message(update.effective_message, teks, parse_mode="markdown")
                 return
-            settypeblacklist = "temporary muted for {}".format(args[1])
+            settypeblacklist = "Silenciado temporalmente por {}".format(args[1])
             sql.set_blacklist_strength(chat_id, 7, str(args[1]))
         else:
             send_message(
                 update.effective_message,
-                "I only understand off/del/warn/ban/kick/mute/tban/tmute!",
+                "Solo entiendo off/del/warn/ban/kick/mute/tban/tmute!",
             )
             return
         if conn:
-            text = "Blacklist sticker mode changed, users will be `{}` at *{}*!".format(
+            text = "El modo de etiqueta de la lista negra ha cambiado, los usuarios `{}` a *{}*!".format(
                 settypeblacklist, chat_name
             )
         else:
-            text = "Blacklist sticker mode changed, users will be `{}`!".format(
+            text = "El modo de etiqueta de la lista negra ha cambiado, los usuarios `{}`!".format(
                 settypeblacklist
             )
         send_message(update.effective_message, text, parse_mode="markdown")
         return (
             "<b>{}:</b>\n"
             "<b>Admin:</b> {}\n"
-            "Changed sticker blacklist mode. users will be {}.".format(
+            "Se cambió el modo de lista negra de calcomanías. los usuarios serán {}.".format(
                 html.escape(chat.title),
                 mention_html(user.id, html.escape(user.first_name)),
                 settypeblacklist,
@@ -350,11 +350,11 @@ def blacklist_mode(update: Update, context: CallbackContext):
         elif getmode == 7:
             settypeblacklist = "temporarily muted for {}".format(getvalue)
         if conn:
-            text = "Blacklist sticker mode is currently set to *{}* in *{}*.".format(
+            text = "El modo de etiqueta de lista negra está configurado actualmente en *{}* en *{}*.".format(
                 settypeblacklist, chat_name
             )
         else:
-            text = "Blacklist sticker mode is currently set to *{}*.".format(
+            text = "El modo de etiqueta de lista negra está configurado actualmente en *{}*.".format(
                 settypeblacklist
             )
         send_message(update.effective_message, text, parse_mode=ParseMode.MARKDOWN)
@@ -386,7 +386,7 @@ def del_blackliststicker(update: Update, context: CallbackContext):
                     warn(
                         update.effective_user,
                         chat,
-                        "Using sticker '{}' which in blacklist stickers".format(
+                        "Usando pegatina '{}' de la lista negra".format(
                             trigger
                         ),
                         message,
@@ -403,7 +403,7 @@ def del_blackliststicker(update: Update, context: CallbackContext):
                     )
                     bot.sendMessage(
                         chat.id,
-                        "{} muted because using '{}' which in blacklist stickers".format(
+                        "{} Silenciado por usar '{}' las pegatinas de la lista negra".format(
                             mention_markdown(user.id, user.first_name), trigger
                         ),
                         parse_mode="markdown",
@@ -415,7 +415,7 @@ def del_blackliststicker(update: Update, context: CallbackContext):
                     if res:
                         bot.sendMessage(
                             chat.id,
-                            "{} kicked because using '{}' which in blacklist stickers".format(
+                            "{} Expulsado por usar '{}' las pegatinas de la lista negra".format(
                                 mention_markdown(user.id, user.first_name), trigger
                             ),
                             parse_mode="markdown",
@@ -426,7 +426,7 @@ def del_blackliststicker(update: Update, context: CallbackContext):
                     chat.kick_member(user.id)
                     bot.sendMessage(
                         chat.id,
-                        "{} banned because using '{}' which in blacklist stickers".format(
+                        "{} Prohibido por usar '{}' las pegatinas de la lista negra".format(
                             mention_markdown(user.id, user.first_name), trigger
                         ),
                         parse_mode="markdown",
@@ -438,7 +438,7 @@ def del_blackliststicker(update: Update, context: CallbackContext):
                     chat.kick_member(user.id, until_date=bantime)
                     bot.sendMessage(
                         chat.id,
-                        "{} banned for {} because using '{}' which in blacklist stickers".format(
+                        "{} Prohibido por {} por usar'{}' las pegatinas de la lista negraformat(
                             mention_markdown(user.id, user.first_name), value, trigger
                         ),
                         parse_mode="markdown",
@@ -455,7 +455,7 @@ def del_blackliststicker(update: Update, context: CallbackContext):
                     )
                     bot.sendMessage(
                         chat.id,
-                        "{} muted for {} because using '{}' which in blacklist stickers".format(
+                        "{} Silenciado por {} por usar '{}' las pegatinas de la lista negra".format(
                             mention_markdown(user.id, user.first_name), value, trigger
                         ),
                         parse_mode="markdown",
@@ -480,7 +480,7 @@ def __migrate__(old_chat_id, new_chat_id):
 
 def __chat_settings__(chat_id, user_id):
     blacklisted = sql.num_stickers_chat_filters(chat_id)
-    return "There are `{} `blacklisted stickers.".format(blacklisted)
+    return "Hay "{}" pegatinas en la lista negra.".format(blacklisted)
 
 
 def __stats__():
@@ -489,7 +489,7 @@ def __stats__():
     )
 
 
-__mod_name__ = "Stickers Blacklist"
+__mod_name__ = "L-N pegatinas"
 
 BLACKLIST_STICKER_HANDLER = DisableAbleCommandHandler(
     "blsticker", blackliststicker, admin_ok=True, run_async=True
