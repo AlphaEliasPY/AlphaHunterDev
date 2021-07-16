@@ -19,22 +19,22 @@ def covid(update: Update, context: CallbackContext):
         try:
             country_data = covid.get_status_by_country_name(country)
         except:
-            return message.reply_text("Wrong country name!")
+            return message.reply_text("Nombre de país incorrecto!")
         
         msg = f"*Corona Virus Info*\n\n"
-        msg += f"• Country: `{country}`\n"
-        msg += f"• Confirmed: `{country_data['confirmed']}`\n"
-        msg += f"• Active: `{country_data['active']}`\n"
-        msg += f"• Deaths: `{country_data['deaths']}`\n"
-        msg += f"• Recovered: `{country_data['recovered']}`\n"
+        msg += f"• Pais: `{country}`\n"
+        msg += f"• Confirmados: `{country_data['confirmed']}`\n"
+        msg += f"• Activos: `{country_data['active']}`\n"
+        msg += f"• Muertos: `{country_data['deaths']}`\n"
+        msg += f"• Recuperados: `{country_data['recovered']}`\n"
         msg += (
             "Last update: "
             f"`{datetime.utcfromtimestamp(country_data['last_update'] // 1000).strftime('%Y-%m-%d %H:%M:%S')}`\n"
         )
-        msg += f"__Data provided by__ [Johns Hopkins University](https://j.mp/2xf6oxF)"
+        msg += f"__Datos proporcionados por__ [Johns Hopkins University](https://j.mp/2xf6oxF)"
             
     else:
-        msg = "Please specify a country"
+        msg = "Por favor especifique un país"
 
     delmsg = message.reply_text(
         text=msg,
