@@ -139,7 +139,7 @@ SLAP_TEMPLATES = (
     "¡{user2} perdió su pieza de carrera!", # Sin juego sin referencia de vida
     "Cállate {user2}, solo eres {user2}.", # Sin juego no hay referencia de vida
     "¡{user1} golpea a {user2} con Aka si anse!", # Sin juego sin referencia de vida
-    "@AlphaElias se rasca {user2}", gato mascota # Pixels - @NeoTheKitty
+    "@AlphaElias se rasca {user2}", # gato mascota # Pixels - @AlphaElias
     "Majin buu se comió a {user2}", # Dbz
     "Goblin Slayer mata a {user2}", # Goblin Slayer
 )
