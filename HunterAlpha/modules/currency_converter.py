@@ -15,7 +15,7 @@ def convert(update: Update, context: CallbackContext):
             orig_cur_amount = float(args[1])
 
         except ValueError:
-            update.effective_message.reply_text("Invalid amount of currency")
+            update.effective_message.reply_text("Cantidad de moneda no válida")
             return
 
         orig_cur = args[2].upper()
@@ -32,10 +32,10 @@ def convert(update: Update, context: CallbackContext):
         response = requests.get(request_url).json()
         try:
             current_rate = float(
-                response["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
+                response["Tipo de cambio de moneda en tiempo real"]["5. Tipo de cambio"]
             )
         except KeyError:
-            update.effective_message.reply_text("Currency not supported.")
+            update.effective_message.reply_text("Moneda no admitida.")
             return
         new_cur_amount = round(orig_cur_amount * current_rate, 5)
         delmsg = update.effective_message.reply_text(
@@ -43,11 +43,11 @@ def convert(update: Update, context: CallbackContext):
         )
 
     elif len(args) == 1:
-        delmsg = update.effective_message.reply_text("Check extras module help for `/cash` usage", parse_mode=ParseMode.MARKDOWN)
+        delmsg = update.effective_message.reply_text("Consulte la ayuda del módulo de extras para `/cash` uso", parse_mode=ParseMode.MARKDOWN)
 
     else:
         delmsg = update.effective_message.reply_text(
-            f"*Invalid Args!!:* Required 3 but passed {len(args) -1}",
+            f"*Args no válidos !!:* Requerido 3 pero aprobado {len(args) -1}",
             parse_mode=ParseMode.MARKDOWN,
         )
 
