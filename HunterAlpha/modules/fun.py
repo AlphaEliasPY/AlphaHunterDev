@@ -282,7 +282,7 @@ def weebify(update: Update, context: CallbackContext):
         string = "  ".join(args).lower()
 
     if not string:
-        deletion(update, context, message.reply_text("Usage is `/weebify <text>`", parse_mode=ParseMode.MARKDOWN))
+        deletion(update, context, message.reply_text("El uso es `/weebify <texto>`", parse_mode=ParseMode.MARKDOWN))
         return
 
     for normiecharacter in string:
@@ -306,21 +306,21 @@ def deletion(update: Update, context: CallbackContext, delmsg):
 
 
 __help__ = """
- • `/runs`*:* reply a random string from an array of replies
- • `/slap`*:* slap a user, or get slapped if not a reply
- • `/shrug`*:* get shrug XD
- • `/table`*:* get flip/unflip :v
- • `/decide`*:* Randomly answers yes/no/maybe
- • `/toss`*:* Tosses A coin
- • `/bluetext`*:* check urself :V
- • `/roll`*:* Roll a dice
- • `/rlg`*:* Join ears,nose,mouth and create an emo ;-;
- • `/shout <keyword>`*:* write anything you want to give loud shout
- • `/weebify <text>`*:* returns a weebified text
- • `/sanitize`*:* always use this before /pat or any contact
- • `/pat`*:* pats a user, or get patted
- • `/8ball`*:* predicts using 8ball method
- • `/plet`*:* text get funny emojify
+ • `/runs`*:* responder una cadena aleatoria de una serie de respuestas
+ • `/slap`*:* abofetear a un usuario, o recibir una bofetada si no es una respuesta
+ • `/shrug`*:* encogerse de hombros XD
+ • `/table`*:* dar flip/unflip :v
+ • `/decide`*:* Respuestas al azar yes/no/maybe
+ • `/toss`*:* Lanza una moneda
+ • `/bluetext`*:* comprobarnos a nosotros mismos XD
+ • `/roll`*:* Rodar un dado
+ • `/rlg`*:* Une orejas, nariz, boca y crea un emo ;-;
+ • `/shout <palabra clave>`*:* escribe todo lo que quieras dar un grito fuerte
+ • `/weebify <texto>`*:* devuelve un texto llorado
+ • `/sanitize`*:* siempre use esto antes / palmadita o cualquier contacto
+ • `/pat`*:* Acaricia a un usuario, o ser acariciado
+ • `/8ball`*:* predice usando el método 8ball
+ • `/plet`*:* el texto se vuelve divertido emojificar
 """
 
 SANITIZE_HANDLER = DisableAbleCommandHandler("sanitize", sanitize, run_async=True)
@@ -353,7 +353,7 @@ dispatcher.add_handler(DECIDE_HANDLER)
 dispatcher.add_handler(EIGHTBALL_HANDLER)
 dispatcher.add_handler(TABLE_HANDLER)
 
-__mod_name__ = "Fun"
+__mod_name__ = "Divertido"
 __command_list__ = [
     "runs",
     "slap",
