@@ -67,10 +67,10 @@ def gettime(update: Update, context: CallbackContext):
     try:
         query = message.text.strip().split(" ", 1)[1]
     except:
-        message.reply_text("Provide a country name/abbreviation/timezone to find.")
+        message.reply_text("Proporcione un nombre de país /abreviatura /zona horaria para encontrar.")
         return
     send_message = message.reply_text(
-        f"Finding timezone info for <b>{query}</b>", parse_mode=ParseMode.HTML
+        f"Buscando información de zona horaria para <b>{query}</b>", parse_mode=ParseMode.HTML
     )
 
     query_timezone = query.lower()
@@ -81,8 +81,8 @@ def gettime(update: Update, context: CallbackContext):
 
     if not result:
         delmsg = send_message.edit_text(
-            f"Timezone info not available for <b>{query}</b>\n"
-            '<b>All Timezones:</b> <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">List here</a>',
+            f"La información de zona horaria no está disponible para <b>{query}</b>\n"
+            '<b>Todas las zonas horarias:</b> <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">List here</a>',
             parse_mode=ParseMode.HTML,
             disable_web_page_preview=True,
         )
@@ -98,16 +98,16 @@ def gettime(update: Update, context: CallbackContext):
         context.dispatcher.run_async(delete, delmsg, cleartime.time)
 
 __help__ = """
- • `/time <query>`*:* Gives information about a timezone.
+ • `/time <consulta> `*: * Da información sobre una zona horaria.
 
-*Available queries:* Country Code/Country Name/Timezone Name
-• 🕐 [Timezones list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+*Consultas disponibles:* Código de país/Nombre de país/Nombre de zona horaria
+• 🕐 [Lista de zonas horarias](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 """
 
 TIME_HANDLER = DisableAbleCommandHandler("time", gettime, run_async=True)
 
 dispatcher.add_handler(TIME_HANDLER)
 
-__mod_name__ = "Time"
+__mod_name__ = "Hora"
 __command_list__ = ["time"]
 __handlers__ = [TIME_HANDLER]
