@@ -20,15 +20,15 @@ def debug(update: Update, context: CallbackContext):
     if len(args) > 1:
         if args[1] in ("yes", "on"):
             DEBUG_MODE = True
-            message.reply_text("Debug mode is now on.")
+            message.reply_text("El modo de depuración ahora está activado.")
         elif args[1] in ("no", "off"):
             DEBUG_MODE = False
-            message.reply_text("Debug mode is now off.")
+            message.reply_text("El modo de depuración ahora está desactivado.")
     else:
         if DEBUG_MODE:
-            message.reply_text("Debug mode is currently on.")
+            message.reply_text("El modo de depuración está activado actualmente.")
         else:
-            message.reply_text("Debug mode is currently off.")
+            message.reply_text("El modo de depuración está desactivado actualmente.")
 
 
 @telethn.on(events.NewMessage(pattern="[/!].*"))
@@ -64,6 +64,6 @@ dispatcher.add_handler(LOG_HANDLER)
 DEBUG_HANDLER = CommandHandler("debug", debug, run_async=True)
 dispatcher.add_handler(DEBUG_HANDLER)
 
-__mod_name__ = "Debug"
+__mod_name__ = "Depurar"
 __command_list__ = ["debug"]
 __handlers__ = [DEBUG_HANDLER]
