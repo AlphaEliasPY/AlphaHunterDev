@@ -17,14 +17,14 @@ def get_user_common_chats(update: Update, context: CallbackContext):
     msg = update.effective_message
     user = extract_user(msg, args)
     if not user:
-        msg.reply_text("I share no common chats with the void.")
+        msg.reply_text("No comparto charlas en común con el vacío.")
         return
     common_list = get_user_com_chats(user)
     if not common_list:
-        msg.reply_text("No common chats with this user!")
+        msg.reply_text("No hay chats comunes con este usuario.!")
         return
     name = bot.get_chat(user).first_name
-    text = f"<b>Common chats with {name}</b>\n"
+    text = f"<b>Chats comunes con {name}</b>\n"
     for chat in common_list:
         try:
             chat_name = bot.get_chat(chat).title
