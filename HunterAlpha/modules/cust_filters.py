@@ -69,13 +69,13 @@ def list_handlers(update: Update, context: CallbackContext):
             filter_list = "*local filters:*\n"
         else:
             chat_name = chat.title
-            filter_list = "*Filters in {}*:\n"
+            filter_list = "*Filtros en {}*:\n"
 
     all_handlers = sql.get_chat_triggers(chat_id)
 
     if not all_handlers:
         send_message(
-            update.effective_message, "No filters saved in {}!".format(chat_name)
+            update.effective_message, "No hay filtros guardados en {}!".format(chat_name)
         )
         return
 
@@ -123,7 +123,7 @@ def filters(update: Update, context: CallbackContext):
     if not msg.reply_to_message and len(args) < 2:
         send_message(
             update.effective_message,
-            "Please provide keyboard keyword for this filter to reply with!",
+            "Proporcione la palabra clave del teclado para que este filtro responda!",
         )
         return
 
@@ -131,7 +131,7 @@ def filters(update: Update, context: CallbackContext):
         if len(args) < 2:
             send_message(
                 update.effective_message,
-                "Please provide keyword for this filter to reply with!",
+                "Proporcione una palabra clave para que este filtro responda!",
             )
             return
         else:
@@ -161,7 +161,7 @@ def filters(update: Update, context: CallbackContext):
         if not text:
             send_message(
                 update.effective_message,
-                "There is no note message - You can't JUST have buttons, you need a message to go with it!",
+                "No hay mensaje de nota: no puede SÓLO tener botones, necesita un mensaje para acompañarlo!",
             )
             return
 
@@ -183,7 +183,7 @@ def filters(update: Update, context: CallbackContext):
     elif not text and not file_type:
         send_message(
             update.effective_message,
-            "Please provide keyword for this filter reply with!",
+            "Proporcione una palabra clave para esta respuesta de filtro con!",
         )
         return
 
@@ -204,12 +204,12 @@ def filters(update: Update, context: CallbackContext):
         if (msg.reply_to_message.text or msg.reply_to_message.caption) and not text:
             send_message(
                 update.effective_message,
-                "There is no note message - You can't JUST have buttons, you need a message to go with it!",
+                "No hay mensaje de nota: no puede SÓLO tener botones, necesita un mensaje para acompañarlo!",
             )
             return
 
     else:
-        send_message(update.effective_message, "Invalid filter!")
+        send_message(update.effective_message, "Filtro inválido!")
         return
 
     add = addnew_filter(update, chat_id, keyword, text, file_type, file_id, buttons)
@@ -245,13 +245,13 @@ def stop_filter(update: Update, context: CallbackContext):
             chat_name = chat.title
 
     if len(args) < 2:
-        send_message(update.effective_message, "What should i stop?")
+        send_message(update.effective_message, "Que debo detener?")
         return
 
     chat_filters = sql.get_chat_triggers(chat_id)
 
     if not chat_filters:
-        send_message(update.effective_message, "No filters active here!")
+        send_message(update.effective_message, "No hay filtros activos aquí!")
         return
 
     for keyword in chat_filters:
@@ -259,14 +259,14 @@ def stop_filter(update: Update, context: CallbackContext):
             sql.remove_filter(chat_id, args[1])
             deletion(update, context, send_message(
                 update.effective_message,
-                "Okay, I'll stop replying to that filter in *{}*.".format(chat_name),
+                "De acuerdo, dejaré de responder a ese filtro en *{}*.".format(chat_name),
                 parse_mode=telegram.ParseMode.MARKDOWN,
             ))
             raise DispatcherHandlerStop
 
     deletion(update, context, send_message(
         update.effective_message,
-        "That's not a filter - Click: /filters to get currently active filters.",
+        "Eso no es un filtro - Click: /filters para obtener filtros actualmente activos.",
     ))
 
 
@@ -287,7 +287,7 @@ def reply_filter(update: Update, context: CallbackContext):
             if MessageHandlerChecker.check_user(update.effective_user.id):
                 return
             filt = sql.get_filter(chat.id, keyword)
-            if filt.reply == "there is should be a new reply":
+            if filt.reply == "debe haber una nueva respuesta":
                 buttons = sql.get_buttons(chat.id, filt.keyword)
                 keyb = build_keyboard_parser(context.bot, chat.id, buttons)
                 keyboard = InlineKeyboardMarkup(keyb)
@@ -322,11 +322,11 @@ def reply_filter(update: Update, context: CallbackContext):
                         except BadRequest as excp:
                             if (
                                 excp.message
-                                == "Wrong remote file identifier specified: wrong padding in the string"
+                                == "Se ha especificado un identificador de archivo remoto incorrecto: relleno incorrecto en la cadena"
                             ):
                                 context.bot.send_message(
                                     chat.id,
-                                    "Message couldn't be sent, Is the sticker id valid?",
+                                    "No se pudo enviar el mensaje. ¿Es válida la id de la etiqueta??",
                                 )
                                 return
                             else:
@@ -398,7 +398,7 @@ def reply_filter(update: Update, context: CallbackContext):
                     except BadRequest:
                         send_message(
                             message,
-                            "I don't have the permission to send the content of the filter.",
+                            "No tengo permiso para enviar el contenido del filtro..",
                         )
                 break
             else:
@@ -428,13 +428,13 @@ def reply_filter(update: Update, context: CallbackContext):
                             reply_markup=keyboard,
                         ))
                     except BadRequest as excp:
-                        if excp.message == "Unsupported url protocol":
+                        if excp.message == "Protocolo de URL no admitido":
                             try:
                                 send_message(
                                     update.effective_message,
-                                    "You seem to be trying to use an unsupported url protocol. "
-                                    "Telegram doesn't support buttons for some protocols, such as tg://. Please try "
-                                    "again...",
+                                    "Parece que intentas utilizar un protocolo de URL no compatible.. "
+                                    "Telegram no admite botones para algunos protocolos, como tg://. Por favor, inténtalo "
+                                    "de nuevo...",
                                 )
                             except BadRequest as excp:
                                 LOGGER.exception("Error in filters: " + excp.message)
@@ -442,7 +442,7 @@ def reply_filter(update: Update, context: CallbackContext):
                             try:
                                 send_message(
                                     update.effective_message,
-                                    "This message couldn't be sent as it's incorrectly formatted.",
+                                    "Este mensaje no se pudo enviar porque tiene un formato incorrecto.",
                                 )
                             except BadRequest as excp:
                                 LOGGER.exception("Error in filters: " + excp.message)
@@ -472,21 +472,21 @@ def rmall_filters(update: Update, context: CallbackContext):
     member = chat.get_member(user.id)
     if member.status != "creator" and user.id not in SUDO_USERS:
         update.effective_message.reply_text(
-            "Only the chat owner can clear all notes at once."
+            "Solo el propietario del chat puede borrar todas las notas a la vez."
         )
     else:
         buttons = InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        text="Stop all filters", callback_data="filters_rmall"
+                        text="Detener todos los filtros", callback_data="filters_rmall"
                     )
                 ],
-                [InlineKeyboardButton(text="Cancel", callback_data="filters_cancel")],
+                [InlineKeyboardButton(text="Cancelar", callback_data="filters_cancel")],
             ]
         )
         update.effective_message.reply_text(
-            f"Are you sure you would like to stop ALL filters in {chat.title}? This action cannot be undone.",
+            f"Está seguro de que desea detener TODOS los filtros en {chat.title}? Esta acción no se puede deshacer.",
             reply_markup=buttons,
             parse_mode=ParseMode.MARKDOWN,
         )
@@ -501,7 +501,7 @@ def rmall_callback(update: Update, context: CallbackContext):
         if member.status == "creator" or query.from_user.id in SUDO_USERS:
             allfilters = sql.get_chat_triggers(chat.id)
             if not allfilters:
-                msg.edit_text("No filters in this chat, nothing to stop!")
+                msg.edit_text("Sin filtros en este chat, nada para detener!")
                 return
 
             count = 0
@@ -513,21 +513,21 @@ def rmall_callback(update: Update, context: CallbackContext):
             for i in filterlist:
                 sql.remove_filter(chat.id, i)
 
-            msg.edit_text(f"Cleaned {count} filters in {chat.title}")
+            msg.edit_text(f"Limpiado {count} filters in {chat.title}")
 
         if member.status == "administrator":
-            query.answer("Only owner of the chat can do this.")
+            query.answer("Solo el dueño del chat puede hacer esto..")
 
         if member.status == "member":
-            query.answer("You need to be admin to do this.")
+            query.answer("Necesitas ser administrador para hacer esto.")
     elif query.data == "filters_cancel":
         if member.status == "creator" or query.from_user.id in SUDO_USERS:
-            msg.edit_text("Clearing of all filters has been cancelled.")
+            msg.edit_text("Se canceló la eliminación de todos los filtros.")
             return
         if member.status == "administrator":
-            query.answer("Only owner of the chat can do this.")
+            query.answer("Solo el dueño del chat puede hacer esto..")
         if member.status == "member":
-            query.answer("You need to be admin to do this.")
+            query.answer("Necesitas ser administrador para hacer esto.")
 
 
 def deletion(update: Update, context: CallbackContext, delmsg):
@@ -540,16 +540,16 @@ def deletion(update: Update, context: CallbackContext, delmsg):
 
 # NOT ASYNC NOT A HANDLER
 def get_exception(excp, filt, chat):
-    if excp.message == "Unsupported url protocol":
-        return "You seem to be trying to use the URL protocol which is not supported. Telegram does not support key for multiple protocols, such as tg: //. Please try again!"
-    elif excp.message == "Reply message not found":
+    if excp.message == "Protocolo de URL no admitido":
+        return "Parece que está intentando utilizar el protocolo URL que no es compatible. Telegram no admite claves para múltiples protocolos, como tg: //. Inténtalo de nuevo!"
+    elif excp.message == "Mensaje de respuesta no encontrado":
         return "noreply"
     else:
         LOGGER.warning("Message %s could not be parsed", str(filt.reply))
         LOGGER.exception(
             "Could not parse filter %s in chat %s", str(filt.keyword), str(chat.id)
         )
-        return "This data could not be sent because it is incorrectly formatted."
+        return "Estos datos no se pudieron enviar porque están formateados incorrectamente."
 
 
 # NOT ASYNC NOT A HANDLER
@@ -557,7 +557,7 @@ def addnew_filter(update, chat_id, keyword, text, file_type, file_id, buttons):
     msg = update.effective_message
     totalfilt = sql.get_chat_triggers(chat_id)
     if len(totalfilt) >= 150:  # Idk why i made this like function....
-        msg.reply_text("This group has reached its max filters limit of 150.")
+        msg.reply_text("Este grupo ha alcanzado su límite máximo de filtros de 150.")
         return False
     else:
         sql.new_add_filter(chat_id, keyword, text, file_type, file_id, buttons)
@@ -565,7 +565,7 @@ def addnew_filter(update, chat_id, keyword, text, file_type, file_id, buttons):
 
 
 def __stats__():
-    return "• {} filters, across {} chats.".format(sql.num_filters(), sql.num_chats())
+    return "• {} filtros, a través de {} chats.".format(sql.num_filters(), sql.num_chats())
 
 
 def __import_data__(chat_id, data):
@@ -581,36 +581,36 @@ def __migrate__(old_chat_id, new_chat_id):
 
 def __chat_settings__(chat_id, user_id):
     cust_filters = sql.get_chat_triggers(chat_id)
-    return "There are `{}` custom filters here.".format(len(cust_filters))
+    return "Existen `{}` filtros personalizados aquí.".format(len(cust_filters))
 
 
 __help__ = """
- • `/filters`*:* List all active filters saved in the chat.
+ • `/filters`*:* Enumere todos los filtros activos guardados en el chat.
 
-*Admin only:*
- • `/filter <keyword> <reply message>`*:* Add a filter to this chat. The bot will now reply that message whenever 'keyword'\
-is mentioned. If you reply to a sticker with a keyword, the bot will reply with that sticker. NOTE: all filter \
-keywords are in lowercase. If you want your keyword to be a sentence, use quotes. eg: /filter "hey there" How you \
-doin?
- Separate diff replies by `%%%` to get random replies
- *Example:* 
- `/filter "filtername"
- Reply 1
+*Solo Administrador:*
+ • `/filter <palabra clave> <mensaje de respuesta>`*:* Agrega un filtro a este chat. El bot ahora responderá ese mensaje siempre que 'palabra clave' \
+es mencionado. Si responde a una calcomanía con una palabra clave, el bot responderá con esa calcomanía. NOTA: todos los filtros \
+las palabras clave están en minúsculas. Si desea que su palabra clave sea una oración, use comillas. p. ej.: /filter "hey allí" ¿Cómo \
+haciendo
+ Separe las respuestas de diferencias por `%%%` para obtener respuestas aleatorias
+ *Ejemplo:* 
+ `/filter "nombre de filtro"
+ Respuesta 1
  %%%
- Reply 2
+ Respuesta 2
  %%%
- Reply 3`
- • `/stop <filter keyword>`*:* Stop that filter.
+ Respuesta 3`
+ • `/stop <palabra clave de filtro>`*:* Detener ese filtro.
 
-*Chat creator only:*
- • `/removeallfilters`*:* Remove all chat filters at once.
+*Solo creador de chat:*
+ • `/removeallfilters`*:* Eliminar todos los filtros de chat a la vez.
 
-*Note*: Filters also support markdown formatters like: {first}, {last} etc.. and buttons.
-Check `/markdownhelp` to know more!
+*Nota*: Los filtros también admiten formateadores de rebajas como: {first}, {last} etc. y botones.
+Cheque `/markdownhelp` para saber mas!
 
 """
 
-__mod_name__ = "Filters"
+__mod_name__ = "Filtros"
 
 FILTER_HANDLER = CommandHandler("filter", filters)
 STOP_HANDLER = CommandHandler("stop", stop_filter)
