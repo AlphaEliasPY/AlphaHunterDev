@@ -5,12 +5,15 @@ from telegram.ext import CallbackContext, run_async
 
 from HunterAlpha import dispatcher
 from HunterAlpha.modules.disable import DisableAbleCommandHandler
+from HunterAlpha.modules.helper_funcs.misc import delete
+from HunterAlpha.modules.sql.clear_cmd_sql import get_clearcmd
 
 
-@run_async
 def totranslate(update: Update, context: CallbackContext):
     message = update.effective_message
+    chat = update.effective_chat
     problem_lang_code = []
+    text = ""
     for key in LANGUAGES:
         if "-" in key:
             problem_lang_code.append(key)
@@ -64,40 +67,52 @@ def totranslate(update: Update, context: CallbackContext):
         if source_lang is None:
             detection = trl.detect(text)
             trans_str = trl.translate(text, lang_tgt=dest_lang)
-            return message.reply_text(
+            delmsg = message.reply_text(
                 f"Translated from `{detection[0]}` to `{dest_lang}`:\n`{trans_str}`",
                 parse_mode=ParseMode.MARKDOWN,
             )
         else:
             trans_str = trl.translate(text, lang_tgt=dest_lang, lang_src=source_lang)
-            message.reply_text(
+            delmsg = message.reply_text(
                 f"Translated from `{source_lang}` to `{dest_lang}`:\n`{trans_str}`",
                 parse_mode=ParseMode.MARKDOWN,
             )
 
+        deletion(update, context, delmsg)
+
     except IndexError:
-        update.effective_message.reply_text(
+        delmsg = update.effective_message.reply_text(
             "Reply to messages or write messages from other languages ​​for translating into the intended language\n\n"
             "Example: `/tr en-ml` to translate from English to Malayalam\n"
             "Or use: `/tr ml` for automatic detection and translating it into Malayalam.\n"
-            "See [List of Language Codes](t.me/OnePunchSupport/12823) for a list of language codes.",
+            "See [List of Language Codes](https://telegra.ph/%F0%9D%94%BC%F0%9D%95%9D-%F0%9D%94%B9%F0%9D%95%A3%F0%9D%95%A0%F0%9D%95%9E%F0%9D%95%92%F0%9D%95%A4-08-01) for a list of language codes.",
             parse_mode="markdown",
             disable_web_page_preview=True,
         )
+        deletion(update, context, delmsg)
     except ValueError:
-        update.effective_message.reply_text("The intended language is not found!")
+        delmsg = update.effective_message.reply_text("The intended language is not found!")
+        deletion(update, context, delmsg)
     else:
         return
 
 
+def deletion(update: Update, context: CallbackContext, delmsg):
+    chat = update.effective_chat
+    cleartime = get_clearcmd(chat.id, "tr")
+
+    if cleartime:
+        context.dispatcher.run_async(delete, delmsg, cleartime.time)
+
+
 __help__ = """
 • `/tr` or `/tl` (language code) as reply to a long message
-*Example:*
+*Example:* 
   `/tr en`*:* translates something to english
   `/tr hi-en`*:* translates hindi to english
 """
 
-TRANSLATE_HANDLER = DisableAbleCommandHandler(["tr", "tl"], totranslate)
+TRANSLATE_HANDLER = DisableAbleCommandHandler(["tr", "tl"], totranslate, run_async=True)
 
 dispatcher.add_handler(TRANSLATE_HANDLER)
 
