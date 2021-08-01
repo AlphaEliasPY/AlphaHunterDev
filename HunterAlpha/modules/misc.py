@@ -8,27 +8,27 @@ from telegram.ext.dispatcher import run_async
 from telegram.ext import CallbackContext, Filters, CommandHandler
 
 MARKDOWN_HELP = f"""
-Markdown is a very powerful formatting tool supported by telegram. {dispatcher.bot.first_name} has some enhancements, to make sure that \
-saved messages are correctly parsed, and to allow you to create buttons.
+Markdown es una herramienta de formato muy poderosa compatible con telegram. {dispatcher.bot.first_name} tiene algunas mejoras, para asegurarse de que \
+los mensajes guardados se analizan correctamente y le permiten crear botones.
 
-• <code>_italic_</code>: wrapping text with '_' will produce italic text
-• <code>*bold*</code>: wrapping text with '*' will produce bold text
-• <code>`code`</code>: wrapping text with '`' will produce monospaced text, also known as 'code'
-• <code>[sometext](someURL)</code>: this will create a link - the message will just show <code>sometext</code>, \
-and tapping on it will open the page at <code>someURL</code>.
-<b>Example:</b><code>[test](example.com)</code>
+• <code> _italic_ </code>: ajustar el texto con '_' producirá texto en cursiva
+• <code> * bold * </code>: ajustar el texto con '*' producirá texto en negrita
+• <code> `code` </code>: ajustar el texto con '`' producirá texto monoespaciado, también conocido como 'código'
+• <code> [sometext] (someURL) </code>: esto creará un enlace - el mensaje solo mostrará <code> sometext </code>, \
+y al tocarlo se abrirá la página en <code> someURL </code>.
+<b> Ejemplo :</b> <código> [prueba] (ejemplo.com) </code>
 
-• <code>[buttontext](buttonurl:someURL)</code>: this is a special enhancement to allow users to have telegram \
-buttons in their markdown. <code>buttontext</code> will be what is displayed on the button, and <code>someurl</code> \
-will be the url which is opened.
-<b>Example:</b> <code>[This is a button](buttonurl:example.com)</code>
+• <code> [buttontext] (buttonurl: someURL) </code>: esta es una mejora especial para permitir que los usuarios tengan telegram \
+botones en su rebaja. <code> buttontext </code> será lo que se muestra en el botón, y <code> someurl </code> \
+será la URL que se abre.
+<b> Ejemplo: </b> <code> [Este es un botón](buttonurl: example.com) </code>
 
-If you want multiple buttons on the same line, use :same, as such:
-<code>[one](buttonurl://example.com)
-[two](buttonurl://google.com:same)</code>
-This will create two buttons on a single line, instead of one button per line.
+Si desea varios botones en la misma línea, use: mismo, como tal:
+<código> [uno](buttonurl://example.com)
+[dos] (buttonurl://google.com:igual) </code>
+Esto creará dos botones en una sola línea, en lugar de un botón por línea.
 
-Keep in mind that your message <b>MUST</b> contain some text other than just a button!
+Tenga en cuenta que su mensaje <b> DEBE </b> contener algún texto que no sea solo un botón!
 """
 
 
@@ -51,10 +51,10 @@ def echo(update: Update, context: CallbackContext):
 def markdown_help_sender(update: Update):
     update.effective_message.reply_text(MARKDOWN_HELP, parse_mode=ParseMode.HTML)
     update.effective_message.reply_text(
-        "Try forwarding the following message to me, and you'll see, and Use #test!"
+        "Intente reenviarme el siguiente mensaje y verá, y use #test!"
     )
     update.effective_message.reply_text(
-        "/save test This is a markdown test. _italics_, *bold*, code, "
+        "/save prueba Esta es una prueba de rebajas. _italics_, *bold*, code, "
         "[URL](example.com) [button](buttonurl:github.com) "
         "[button2](buttonurl://google.com:same)"
     )
@@ -63,12 +63,12 @@ def markdown_help_sender(update: Update):
 def markdown_help(update: Update, context: CallbackContext):
     if update.effective_chat.type != "private":
         update.effective_message.reply_text(
-            "Contact me in pm",
+            "Contáctame en pm",
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            "Markdown help",
+                            "Ayuda de Markdown",
                             url=f"t.me/{context.bot.username}?start=markdownhelp",
                         )
                     ]
@@ -80,36 +80,36 @@ def markdown_help(update: Update, context: CallbackContext):
 
 
 __help__ = """
-*Available commands:*\n
+*Comandos disponibles:*\n
 *Covid:*
- • `/covid <country>`: provides lastest covid information\n
-*Weather:*
- • `/weather <city>`: gives weather information about a specific location or country\n
-*Quotly:*
- • `/quotly`: reply to a message to get a quoted message\n
+ • `/covid <país>`: proporciona la información más reciente sobre covid\n
+*Tiempo:*
+ • `/weather <ciudad>`: proporciona información meteorológica sobre una ubicación o un país específicos\n
+*Cita:*
+ • `/quotly`: responder a un mensaje para obtener un mensaje citado\n
 *Markdown:*
- • `/markdownhelp`*:* quick summary of how markdown works in telegram - can only be called in private chats\n
-*Paste:*
- • `/paste`*:* saves replied content to `nekobin.com` and replies with a url\n
-*React:*
- • `/react`*:* reacts with a random reaction\n
-*Urban Dictonary:*
- • `/ud <word>`*:* type the word or expression you want to search use\n
+ • `/markdownhelp`*:* resumen rápido de cómo funciona Markdown en Telegram: solo se puede llamar en chats privados\n
+*Pegar:*
+ • `/paste`*:* guarda el contenido respondido en `nekobin.com` y responde con una URL\n
+*Reaccionar:*
+ • `/react`*:* reacciona con una reacción aleatoria\n
+*Diccionario urbano:*
+ • `/ud <palabra>`*:* escriba la palabra o expresión que desea utilizar para buscar\n
 *Wikipedia:*
- • `/wiki <query>`*:* wikipedia your query\n
+ • `/wiki <consulta>`*:* wikipedia tu consulta\n
 *Wallpapers:*
- • `/wall <query>`*:* get a wallpaper from wall.alphacoders.com\n
-*Currency converter:* 
- • `/cash`*:* currency converter
-Example:
+ • `/wall <consulta>`*:* conseguir un fondo de pantalla de wall.alphacoders.com\n
+*Convertidor de moneda:* 
+ • `/cash`*:* Convertidor de moneda
+Ejemplo:
  `/cash 1 USD INR`  
       _OR_
  `/cash 1 usd inr`
 Output: `1.0 USD = 75.505 INR`\n
 *Timezones:*
- • `/time <query>`*:* Gives information about a timezone.
-*Available queries:* Country Code/Country Name/Timezone Name
-• 🕐 [Timezones list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+ • `/time <consulta>`*:* Da información sobre una zona horaria.
+*Consultas disponibles:* Código de país /Nombre de país /Nombre de zona horaria
+• 🕐 [Lista de zonas horarias](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 """
 
 ECHO_HANDLER = DisableAbleCommandHandler("echo", echo, filters=Filters.chat_type.groups, run_async=True)
