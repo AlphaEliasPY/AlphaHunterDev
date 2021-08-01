@@ -23,24 +23,24 @@ from telegram.utils.helpers import mention_html
 
 def check_user(user_id: int, bot: Bot, chat: Chat) -> Optional[str]:
     if not user_id:
-        reply = "You don't seem to be referring to a user or the ID specified is incorrect.."
+        reply = "Parece que no se está refiriendo a un usuario o el ID especificado es incorrecto.."
         return reply
 
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
-        if excp.message == "User not found":
-            reply = "I can't seem to find this user"
+        if excp.message == "Usuario no encontrado":
+            reply = "Parece que no puedo encontrar a este usuario"
             return reply
         else:
             raise
 
     if user_id == bot.id:
-        reply = "I'm not gonna MUTE myself, How high are you?"
+        reply = "No me voy a enmudecer, que tan alto estas?"
         return reply
 
     if is_user_admin(chat, user_id, member):
-        reply = "Can't. Find someone else to mute but not this one."
+        reply = "Hipocresía. Encuentra a alguien más para silenciar, pero no a este."
         return reply
 
     return None
@@ -75,7 +75,7 @@ def mute(update: Update, context: CallbackContext) -> str:
     )
 
     if reason:
-        log += f"\n<b>Reason:</b> {reason}"
+        log += f"\n<b>Razon:</b> {reason}"
 
     if member.can_send_messages is None or member.can_send_messages:
         chat_permissions = ChatPermissions(can_send_messages=False)
@@ -91,7 +91,7 @@ def mute(update: Update, context: CallbackContext) -> str:
         return log
 
     else:
-        message.reply_text("This user is already muted!")
+        message.reply_text("Este usuario ya está silenciado!")
 
     return ""
 
@@ -109,7 +109,7 @@ def unmute(update: Update, context: CallbackContext) -> str:
     user_id = extract_user(message, args)
     if not user_id:
         message.reply_text(
-            "You'll need to either give me a username to unmute, or reply to someone to be unmuted."
+            "Deberá darme un nombre de usuario para activar el sonido o responder a alguien para que se active el sonido."
         )
         return ""
 
@@ -122,7 +122,7 @@ def unmute(update: Update, context: CallbackContext) -> str:
             and member.can_send_other_messages
             and member.can_add_web_page_previews
         ):
-            message.reply_text("This user already has the right to speak.")
+            message.reply_text("Este usuario ya tiene derecho a hablar..")
         else:
             chat_permissions = ChatPermissions(
                 can_send_messages=True,
@@ -140,7 +140,7 @@ def unmute(update: Update, context: CallbackContext) -> str:
                 pass
             bot.sendMessage(
                 chat.id,
-                f"I shall allow <b>{html.escape(member.user.first_name)}</b> to text!",
+                f"Yo permitiré <b>{html.escape(member.user.first_name)}</b> textear!",
                 parse_mode=ParseMode.HTML,
             )
             return (
@@ -151,8 +151,8 @@ def unmute(update: Update, context: CallbackContext) -> str:
             )
     else:
         message.reply_text(
-            "This user isn't even in the chat, unmuting them won't make them talk more than they "
-            "already do!"
+            "Este usuario ni siquiera está en el chat, dejar de silenciarlo no lo hará hablar más de lo que dice. "
+            "ya lo hacen!"
         )
 
     return ""
@@ -179,7 +179,7 @@ def temp_mute(update: Update, context: CallbackContext) -> str:
     member = chat.get_member(user_id)
 
     if not reason:
-        message.reply_text("You haven't specified a time to mute this user for!")
+        message.reply_text("No has especificado un momento para silenciar a este usuario.!")
         return ""
 
     split_reason = reason.split(None, 1)
@@ -203,7 +203,7 @@ def temp_mute(update: Update, context: CallbackContext) -> str:
         f"<b>Time:</b> {time_val}"
     )
     if reason:
-        log += f"\n<b>Reason:</b> {reason}"
+        log += f"\n<b>Razon:</b> {reason}"
 
     try:
         if member.can_send_messages is None or member.can_send_messages:
@@ -221,32 +221,32 @@ def temp_mute(update: Update, context: CallbackContext) -> str:
             bot.sendMessage(chat.id, reply, parse_mode=ParseMode.HTML)
             return log
         else:
-            message.reply_text("This user is already muted.")
+            message.reply_text("Este usuario ya está silenciado.")
 
     except BadRequest as excp:
-        if excp.message == "Reply message not found":
+        if excp.message == "Mensaje de respuesta no encontrado":
             # Do not reply
             message.reply_text(f"Muted for {time_val}!", quote=False)
             return log
         else:
             LOGGER.warning(update)
             LOGGER.exception(
-                "ERROR muting user %s in chat %s (%s) due to %s",
+                "ERROR silenciar al usuario %s en el chat %s (%s) debido a %s",
                 user_id,
                 chat.title,
                 chat.id,
                 excp.message,
             )
-            message.reply_text("Well damn, I can't mute that user.")
+            message.reply_text("Bueno maldita sea, no puedo silenciar a ese usuario.")
 
     return ""
 
 
 __help__ = """
-*Admins only:*
- • `/mute <userhandle> <reason>(optional)`*:* silences a user. Can also be used as a reply, muting the replied to user.
- • `/tmute <userhandle> x(m/h/d) <reason>(optional)`*:* mutes a user for x time. (via handle, or reply). `m` = `minutes`, `h` = `hours`, `d` = `days`.
- • `/unmute <userhandle>`*:* unmutes a user. Can also be used as a reply, muting the replied to user.
+*Solo administradores:*
+ • `/mute <userhandle> <razón> (opcional)`*:* silencia a un usuario. También se puede utilizar como respuesta, silenciando la respuesta al usuario..
+ • `/tmute <userhandle> x (m / h / d) <reason> (opcional)`*:* silencia a un usuario por x tiempo. (a través del identificador o respuesta). `m` =` minutos`, `h` =` horas`, `d` =` días`.
+ • `/unmute <userhandle>`*:* activa el sonido de un usuario. También se puede utilizar como respuesta, silenciando la respuesta al usuario..
 """
 
 MUTE_HANDLER = CommandHandler("mute", mute, run_async=True)
@@ -257,5 +257,5 @@ dispatcher.add_handler(MUTE_HANDLER)
 dispatcher.add_handler(UNMUTE_HANDLER)
 dispatcher.add_handler(TEMPMUTE_HANDLER)
 
-__mod_name__ = "Muting"
+__mod_name__ = "Silenciar"
 __handlers__ = [MUTE_HANDLER, UNMUTE_HANDLER, TEMPMUTE_HANDLER]
