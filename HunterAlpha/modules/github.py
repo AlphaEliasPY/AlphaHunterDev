@@ -35,15 +35,15 @@ from telegram import (
 def getphh(index):
     recentRelease = api.getReleaseData(api.getData("phhusson/treble_experimentations"), index)
     if recentRelease is None:
-        return "The specified release could not be found"
+        return "No se pudo encontrar la versión especificada"
     author = api.getAuthor(recentRelease)
     authorUrl = api.getAuthorUrl(recentRelease)
     name = api.getReleaseName(recentRelease)
     assets = api.getAssets(recentRelease)
     releaseName = api.getReleaseName(recentRelease)
-    message = "<b>Author:</b> <a href='{}'>{}</a>\n".format(authorUrl, author)
-    message += "<b>Release Name:</b> <code>"+releaseName+"</code>\n\n"
-    message += "<b>Assets:</b>\n"
+    message = "<b>Autor:</b> <a href='{}'>{}</a>\n".format(authorUrl, author)
+    message += "<b>Liberar Name:</b> <code>"+releaseName+"</code>\n\n"
+    message += "<b>Activos:</b>\n"
     for asset in assets:
         fileName = api.getReleaseFileName(asset)
         if fileName in ("manifest.xml", "patches.zip"):
@@ -60,19 +60,19 @@ def getphh(index):
 # do not async
 def getData(url, index):
     if not api.getData(url):
-        return "Invalid <user>/<repo> combo"
+        return "Invalido <user>/<repo> combo"
     recentRelease = api.getReleaseData(api.getData(url), index)
     if recentRelease is None:
-        return "The specified release could not be found"
+        return "No se pudo encontrar la versión especificada"
     author = api.getAuthor(recentRelease)
     authorUrl = api.getAuthorUrl(recentRelease)
     name = api.getReleaseName(recentRelease)
     assets = api.getAssets(recentRelease)
     releaseName = api.getReleaseName(recentRelease)
-    message = "*Author:* [{}]({})\n".format(author, authorUrl)
-    message += "*Release Name:* " + releaseName + "\n\n"
+    message = "*Autor:* [{}]({})\n".format(author, authorUrl)
+    message += "*Nombre de la versión:* " + releaseName + "\n\n"
     for asset in assets:
-        message += "*Asset:* \n"
+        message += "*Activo:* \n"
         fileName = api.getReleaseFileName(asset)
         fileURL = api.getReleaseFileURL(asset)
         assetFile = "[{}]({})".format(fileName, fileURL)
@@ -81,7 +81,7 @@ def getData(url, index):
         downloadCount = api.getDownloadCount(asset)
         message += assetFile + "\n"
         message += "Size: " + size + " MB"
-        message += "\nDownload Count: " + str(downloadCount) + "\n\n"
+        message += "\nRecuento de descargas: " + str(downloadCount) + "\n\n"
     return message
 
 
@@ -98,14 +98,14 @@ def getRelease(update: Update, context: CallbackContext):
     bot, args = context.bot, context.args
     msg = update.effective_message
     if len(args) == 0:
-        msg.reply_text("Please use some arguments!")
+        msg.reply_text("Utilice algunos argumentos!")
         return
     if (
         len(args) != 1
         and not (len(args) == 2 and args[1].isdigit())
         and not ("/" in args[0])
     ):
-        deletion(update, context, msg.reply_text("Please specify a valid combination of <user>/<repo>"))
+        deletion(update, context, msg.reply_text("Especifique una combinación válida de <user>/<repo>"))
         return
     index = 0
     if len(args) == 2:
@@ -125,7 +125,7 @@ def hashFetch(update: Update, context: CallbackContext):  # kanged from notes
     url, index = getRepo(bot, update, no_hash)
     if url is None and index is None:
         deletion(update, context, msg.reply_text(
-            "There was a problem parsing your request. Likely this is not a saved repo shortcut",
+            "Hubo un problema al analizar su solicitud. Es probable que este no sea un atajo de repositorio guardado",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         ))
@@ -139,12 +139,12 @@ def cmdFetch(update: Update, context: CallbackContext):
     bot, args = context.bot, context.args
     msg = update.effective_message
     if len(args) != 1:
-        deletion(update, context, msg.reply_text("Invalid repo name"))
+        deletion(update, context, msg.reply_text("Nombre de repositorio no válido"))
         return
     url, index = getRepo(bot, update, args[0])
     if url is None and index is None:
         deletion(update, context, msg.reply_text(
-            "There was a problem parsing your request. Likely this is not a saved repo shortcut",
+            "Hubo un problema al analizar su solicitud. Es probable que este no sea un atajo de repositorio guardado",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         ))
@@ -158,11 +158,11 @@ def changelog(update: Update, context: CallbackContext):
     bot, args = context.bot, context.args
     msg = update.effective_message
     if len(args) != 1:
-        deletion(update, context, msg.reply_text("Invalid repo name"))
+        deletion(update, context, msg.reply_text("Nombre de repositorio no válido"))
         return
     url, index = getRepo(bot, update, args[0])
     if not api.getData(url):
-        msg.reply_text("Invalid <user>/<repo> combo")
+        msg.reply_text("Invalido <user>/<repo> combo")
         return
     data = api.getData(url)
     release = api.getReleaseData(data, index)
@@ -181,13 +181,13 @@ def saveRepo(update: Update, context: CallbackContext):
         and (len(args) != 3 and not args[2].isdigit())
         or not ("/" in args[1])
     ):
-        deletion(update, context, msg.reply_text("Invalid data, use <reponame> <user>/<repo> <value (optional)>"))
+        deletion(update, context, msg.reply_text("Datos inválidos, utilice <reponame> <user>/<repo> <valor (opcional)>"))
         return
     index = 0
     if len(args) == 3:
         index = int(args[2])
     sql.add_repo_to_db(str(chat_id), args[0], args[1], index)
-    deletion(update, context, msg.reply_text("Repo shortcut saved successfully!"))
+    deletion(update, context, msg.reply_text("Acceso directo al repositorio guardado correctamente!"))
     return
 
 
@@ -200,7 +200,7 @@ def delRepo(update: Update, context: CallbackContext):
         msg.reply_text("Invalid repo name!")
         return
     sql.rm_repo(str(chat_id), args[0])
-    deletion(update, context, msg.reply_text("Repo shortcut deleted successfully!"))
+    deletion(update, context, msg.reply_text("Acceso directo al repositorio eliminado correctamente!"))
     return
 
 
@@ -209,16 +209,16 @@ def listRepo(update: Update, context: CallbackContext):
     chat = update.effective_chat
     chat_name = chat.title or chat.first or chat.username
     repo_list = sql.get_all_repos(str(chat_id))
-    msg = "*List of repo shotcuts in {}:*\n"
-    des = "You can get repo shortcuts by using `/fetch repo`, or `&repo`.\n"
+    msg = "*Lista de accesos directos a repositorios en {}:*\n"
+    des = "Puede obtener accesos directos a repositorios utilizando `/fetch repo`, or `&repo`.\n"
     for repo in repo_list:
         repo_name = " • `{}`\n".format(repo.name)
         if len(msg) + len(repo_name) > MAX_MESSAGE_LENGTH:
             deletion(update, context, update.effective_message.reply_text(msg, parse_mode=ParseMode.MARKDOWN))
             msg = ""
         msg += repo_name
-    if msg == "*List of repo shotcuts in {}:*\n":
-        deletion(update, context, update.effective_message.reply_text("No repo shortcuts in this chat!"))
+    if msg == "*Lista de accesos directos a repositorios en {}:*\n":
+        deletion(update, context, update.effective_message.reply_text("No hay atajos de repositorio en este chat!"))
     elif len(msg) != 0:
         deletion(update, context, update.effective_message.reply_text(
             msg.format(chat_name) + des, parse_mode=ParseMode.MARKDOWN
@@ -241,18 +241,18 @@ def deletion(update: Update, context: CallbackContext, delmsg):
 
 
 __help__ = """
-*Github module. This module will fetch github releases*\n
-*Available commands:*
- • `/git <user>/<repo>`: will fetch the most recent release from that repo.
- • `/git <user>/<repo> <number>`: will fetch releases in past.
- • `/fetch <reponame> or &reponame`: same as `/git`, but you can use a saved repo shortcut
- • `/listrepo`: lists all repo shortcuts in chat
- • `/gitver`: returns the current API version
- • `/changelog <reponame>`: gets the changelog of a saved repo shortcut
+*Módulo Github. Este módulo buscará lanzamientos de github*\n
+*Comandos disponibles:*
+ • `/git <user>/<repo>`: obtendrá la versión más reciente de ese repositorio.
+ • `/git <user>/<repo> <numero>`: buscará lanzamientos en el pasado.
+ • `/fetch <reponame> o &reponame`: igual que `/git`, pero puedes usar un atajo de repositorio guardado
+ • `/listrepo`: enumera todos los accesos directos a repositorios en el chat
+ • `/gitver`: devuelve la versión actual de la API
+ • `/changelog <reponame>`: obtiene el registro de cambios de un acceso directo al repositorio guardado
  
-*Admin only:*
- • `/saverepo <name> <user>/<repo> <number (optional)>`: saves a repo value as shortcut
- • `/delrepo <name>`: deletes a repo shortcut
+*Solo administrador:*
+ • `/saverepo <name> <user>/<repo> <numero (opcional)>`: guarda un valor de repositorio como acceso directo
+ • `/delrepo <name>`: elimina un atajo de repositorio
 """
 
 __mod_name__ = "GitHub"
