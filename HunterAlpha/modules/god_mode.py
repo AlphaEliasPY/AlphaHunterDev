@@ -29,10 +29,10 @@ ELEVATED_USERS_FILE = os.path.join(os.getcwd(), "HunterAlpha/elevated_users.json
 def check_user_id(user_id: int, context: CallbackContext) -> Optional[str]:
     bot = context.bot
     if not user_id:
-        reply = "That...is a chat! baka ka omae?"
+        reply = "Eso ... ¡es una charla!?"
 
     elif user_id == bot.id:
-        reply = "This does not work that way."
+        reply = "Esto no funciona de esa manera."
 
     else:
         reply = None
@@ -71,20 +71,20 @@ def addsudo(update: Update, context: CallbackContext) -> str:
         data = json.load(infile)
 
     if user_id in DEV_USERS:
-        message.reply_text("Huh? he is more than sudo!")
+        message.reply_text("¿Eh? el es mas que sudo!")
         return ""
 
     if user_id in SUDO_USERS:
-        message.reply_text("This user is already sudo")
+        message.reply_text("Este usuario ya es sudo")
         return ""
 
     if user_id in SUPPORT_USERS:
-        rt += "Promoted from support user to sudo"
+        rt += "Promocionado de usuario de soporte a sudo"
         data["supports"].remove(user_id)
         SUPPORT_USERS.remove(user_id)
 
     if user_id in WHITELIST_USERS:
-        rt += "Promoted from whitelist user to sudo"
+        rt += "Promocionado de usuario de la lista blanca a sudo"
         data["whitelists"].remove(user_id)
         WHITELIST_USERS.remove(user_id)
 
@@ -95,7 +95,7 @@ def addsudo(update: Update, context: CallbackContext) -> str:
         json.dump(data, outfile, indent=4)
 
     update.effective_message.reply_text(
-        rt + "\nSuccessfully promoted to sudo!".format(user_member.first_name)
+        rt + "\nExitosamente promovido a sudo!".format(user_member.first_name)
     )
 
     log_message = (
@@ -133,16 +133,16 @@ def addsupport(
         data = json.load(infile)
 
     if user_id in SUDO_USERS:
-        rt += "Demoted from sudo to support user"
+        rt += "Degradado de sudo para apoyar al usuario"
         data["sudos"].remove(user_id)
         SUDO_USERS.remove(user_id)
 
     if user_id in SUPPORT_USERS:
-        message.reply_text("This user is already sudo")
+        message.reply_text("Este usuario ya es sudo")
         return ""
 
     if user_id in WHITELIST_USERS:
-        rt += "Promoted from whitelist to support user"
+        rt += "Promocionado de la lista blanca para apoyar al usuario"
         data["whitelists"].remove(user_id)
         WHITELIST_USERS.remove(user_id)
 
@@ -153,7 +153,7 @@ def addsupport(
         json.dump(data, outfile, indent=4)
 
     update.effective_message.reply_text(
-        rt + f"\nSuccessfully promoted {user_member.first_name} to support user"
+        rt + f"\nPromocionado con éxito {user_member.first_name} Para apoyar al usuario"
     )
 
     log_message = (
@@ -188,17 +188,17 @@ def addwhitelist(update: Update, context: CallbackContext) -> str:
         data = json.load(infile)
 
     if user_id in SUDO_USERS:
-        rt += "Demoted from sudo to whitelist user"
+        rt += "Degradado de sudo a usuario de la lista blanca"
         data["sudos"].remove(user_id)
         SUDO_USERS.remove(user_id)
 
     if user_id in SUPPORT_USERS:
-        rt += "Demoted from support user to whitelist user"
+        rt += "Degradado de usuario de soporte a usuario de lista blanca"
         data["supports"].remove(user_id)
         SUPPORT_USERS.remove(user_id)
 
     if user_id in WHITELIST_USERS:
-        message.reply_text("This user is already a whitelist user")
+        message.reply_text("Este usuario ya es un usuario de la lista blanca.")
         return ""
 
     data["whitelists"].append(user_id)
@@ -208,7 +208,7 @@ def addwhitelist(update: Update, context: CallbackContext) -> str:
         json.dump(data, outfile, indent=4)
 
     update.effective_message.reply_text(
-        rt + f"\nSuccessfully promoted {user_member.first_name} to whitelist user!"
+        rt + f"\nPromocionado con éxito {user_member.first_name} para incluir al usuario en la lista blanca!"
     )
 
     log_message = (
@@ -242,11 +242,11 @@ def removesudo(update: Update, context: CallbackContext) -> str:
         data = json.load(infile)
 
     if user_id in DEV_USERS:
-        message.reply_text("Huh? he is more than sudo!")
+        message.reply_text("¿Eh? el es mas que sudo!")
         return ""
 
     if user_id in SUDO_USERS:
-        message.reply_text("Demoted to normal user")
+        message.reply_text("Degradado a usuario normal")
         SUDO_USERS.remove(user_id)
         data["sudos"].remove(user_id)
 
@@ -265,7 +265,7 @@ def removesudo(update: Update, context: CallbackContext) -> str:
         return log_message
 
     else:
-        message.reply_text("This user is not sudo")
+        message.reply_text("Este usuario no es sudo")
         return ""
 
 
@@ -288,7 +288,7 @@ def removesupport(update: Update, context: CallbackContext) -> str:
         data = json.load(infile)
 
     if user_id in SUPPORT_USERS:
-        message.reply_text("Demoted to normal user")
+        message.reply_text("Degradado a usuario normal")
         SUPPORT_USERS.remove(user_id)
         data["supports"].remove(user_id)
 
@@ -307,7 +307,7 @@ def removesupport(update: Update, context: CallbackContext) -> str:
         return log_message
 
     else:
-        message.reply_text("This user is not a support user")
+        message.reply_text("Este usuario no es un usuario de soporte.")
         return ""
 
 
@@ -330,7 +330,7 @@ def removewhitelist(update: Update, context: CallbackContext) -> str:
         data = json.load(infile)
 
     if user_id in WHITELIST_USERS:
-        message.reply_text("Demoting to normal user")
+        message.reply_text("Degradación al usuario normal")
         WHITELIST_USERS.remove(user_id)
         data["whitelists"].remove(user_id)
 
@@ -348,7 +348,7 @@ def removewhitelist(update: Update, context: CallbackContext) -> str:
 
         return log_message
     else:
-        message.reply_text("This user is not a whitelist user")
+        message.reply_text("Este usuario no es un usuario de la lista blanca.")
         return ""
 
 
@@ -356,7 +356,7 @@ def removewhitelist(update: Update, context: CallbackContext) -> str:
 def whitelistlist(update: Update, context: CallbackContext):
     bot = context.bot
     message = update.effective_message
-    msg = "<b>Whitelist users:</b>\n"
+    msg = "<b>Usuarios de la lista blanca:</b>\n"
     for each_user in WHITELIST_USERS:
         user_id = int(each_user)
         try:
@@ -372,7 +372,7 @@ def whitelistlist(update: Update, context: CallbackContext):
 def supportlist(update: Update, context: CallbackContext):
     bot = context.bot
     message = update.effective_message
-    msg = "<b>Support users:</b>\n"
+    msg = "<b>Usuarios de soporte:</b>\n"
     for each_user in SUPPORT_USERS:
         user_id = int(each_user)
         try:
@@ -388,7 +388,7 @@ def sudolist(update: Update, context: CallbackContext):
     bot = context.bot
     message = update.effective_message
     true_sudo = list(set(SUDO_USERS) - set(DEV_USERS))
-    msg = "<b>Sudo users:</b>\n"
+    msg = "<b>Usuarios de sudo:</b>\n"
     for each_user in true_sudo:
         user_id = int(each_user)
         try:
@@ -404,7 +404,7 @@ def devlist(update: Update, context: CallbackContext):
     bot = context.bot
     message = update.effective_message
     true_dev = list(set(DEV_USERS) - {OWNER_ID})
-    msg = "<b>Developer users:</b>\n"
+    msg = "<b>Usuarios desarrolladores:</b>\n"
     for each_user in true_dev:
         user_id = int(each_user)
         try:
@@ -416,75 +416,75 @@ def devlist(update: Update, context: CallbackContext):
 
 
 __help__ = f"""
-*⚠️ Notice:*
-Commands listed here only work for users with special access and are mainly used for troubleshooting, debugging purposes.
-Group admins/group owners do not need these commands. 
+*⚠️ Noticia:*
+Los comandos enumerados aquí solo funcionan para usuarios con acceso especial y se utilizan principalmente para solucionar problemas y depurar.
+Los administradores de grupo / propietarios de grupo no necesitan estos comandos. 
 
-*List all special users:*
-• `/sudolist`: lists all users which have sudo access to the bot
-• `/supportlist`: lists all users which are allowed to gban, but can also be banned
-• `/whitelistlist`: lists all users which cannot be banned, muted flood or kicked but can be manually banned by admins
-• `/devlist`: lists all developer users who will have the same perms as the owner
-• `/addsudo`: adds a user as sudo
-• `/addsupport`: adds a user as support
-• `/addwhitelist`: adds a user as whitelist
-• `/removesudo`: remove a sudo user
-• `/removesupport`: remove support user
-• `/removewhitelist`: remove a whitelist user
+*Lista de todos los usuarios especiales:*
+• `/sudolist`: enumera todos los usuarios que tienen acceso sudo al bot
+• `/supportlist`: enumera todos los usuarios que están autorizados a utilizar gban, pero que también pueden ser baneados
+• `/whitelistlist`: enumera todos los usuarios que no se pueden prohibir, silenciar la inundación o expulsar, pero que los administradores pueden prohibir manualmente
+• `/devlist`: enumera todos los usuarios desarrolladores que tendrán los mismos permisos que el propietario
+• `/addsudo`: Agrega un usuario como sudo
+• `/addsupport`: Agrega un usuario como soporte
+• `/addwhitelist`: Agrega un usuario como lista blanca
+• `/removesudo`: eliminar un usuario de sudo
+• `/removesupport`: eliminar usuario de soporte
+• `/removewhitelist`: Eliminar un usuario de la lista blanca
 
-*Broadcast: (Bot owner only)*
-• *Note:* this supports basic markdown
-• `/broadcastall`: broadcasts everywhere
-• `/broadcastusers`: broadcasts too all users
-• `/broadcastgroups`: broadcasts too all groups
+*Transmisión: (solo propietario del bot)*
+• *Nota:* esto es compatible con la rebaja básica
+• `/broadcastall`: retransmisiones por todas partes
+• `/broadcastusers`: Emite también a todos los usuarios.
+• `/broadcastgroups`: también transmite todos los grupos
 
-*Groups Info:*
-• `/groups`: list the groups with Name, ID, members count as a txt
-• `/chatlist`: same as groups
-• `/leave <ID>`: leave the group, ID must have hyphen
-• `/stats`: shows overall bot stats
-• `/getchats`: gets a list of group names the user has been seen in. Bot owner only
-• `/ginfo username/link/ID`: pulls info panel for entire group
+*Información de grupos:*
+• `/groups`: enumere los grupos con nombre, ID, los miembros cuentan como un txt
+• `/chatlist`: lo mismo que los grupos
+• `/leave <ID>`: dejar el grupo, la identificación debe tener un guión
+• `/stats`: muestra las estadísticas generales del bot
+• `/getchats`: obtiene una lista de nombres de grupos en los que se ha visto al usuario. Solo propietario del bot
+• `/ginfo username/link/ID`: extrae el panel de información para todo el grupo
 
-*Access control:* 
-• `/ignore`: blacklists a user from using the bot entirely
-• `/notice`: removes user from blacklist
-• `/ignoredlist`: lists ignored users
+*Control de acceso:* 
+• `/ignore`: Lista negra de un usuario para usar el bot por completo
+• `/notice`: Elimina al usuario de la lista negra
+• `/ignoredlist`: listas de usuarios ignorados
 
-*Sys tools:* 
-• `/ip`: gets bot connection ip (bot owner only)
-• `/ping`: gets ping time of bot to telegram server
-• `/speedtest`: runs a speedtest and gives you 2 options to choose from, text or image output
-• `/status`: gets some system info
+*Herramientas del sistema:* 
+• `/ip`: obtiene la ip de la conexión del bot (solo el propietario del bot)
+• `/ping`: obtiene el tiempo de ping del bot al servidor de telegramas
+• `/speedtest`: ejecuta una prueba de velocidad y le ofrece 2 opciones para elegir, salida de texto o imagen
+• `/status`: obtiene información del sistema
 
 *Global Bans:*
-• `/gban <id> <reason>`: gbans the user, works by reply too
-• `/ungban`: ungbans the user, same usage as gban
-• `/gbanlist`: outputs a list of gbanned users
+• `/gban <id> <razon>`: Gbans el usuario, funciona por respuesta también
+• `/ungban`: Desbloquea al usuario, el mismo uso que gban
+• `/gbanlist`: genera una lista de usuarios gbanned
 
-*Module loading:*
-• `/listmodules`: prints modules and their names
-• `/unload <name>`: unloads module dynamically
-• `/load <name>`: loads module
+*Carga del módulo:*
+• `/listmodules`: imprime módulos y sus nombres
+• `/unload <nombre>`: descarga el módulo dinámicamente
+• `/load <nombre>`: módulo de cargas
 
-*Remote commands:*
-• `/rban user group`: remote ban
-• `/runban user group`: remote un-ban
-• `/rpunch user group`: remote punch
-• `/rmute user group`: remote mute
-• `/runmute user group`: remote un-mute
-• `/ginfo username/link/ID`: pulls info panel for entire group
+*Comandos remotos:*
+• `/rban user group`: prohibición remota
+• `/runban user group`: des-prohibición remota
+• `/rpunch user group`: golpe remoto
+• `/rmute user group`: Mudo remoto
+• `/runmute user group`: des-silencio remoto
+• `/ginfo username/link/ID`: extrae el panel de información para todo el grupo
  
-*Debugging and Shell:* 
-• `/debug <on/off>`: logs commands to updates.txt
-• `/logs`: run this in support group to get logs in pm
-• `/eval`: self explanatory
-• `/sh`: runs shell command (bot owner only)
-• `/py`: runs python code (bot owner only)
-• `/clearlocals`: as the name goes
-• `/dbcleanup`: removes deleted accs and groups from db
+*Depuración y Shell:* 
+• `/debug <on/off>`: registra los comandos en updates.txt
+• `/logs`: ejecute esto en el grupo de apoyo para obtener registros en pm
+• `/eval`: Auto explicativo
+• `/sh`: ejecuta el comando de shell (solo propietario del bot)
+• `/py`: ejecuta código Python (solo propietario del bot)
+• `/clearlocals`: como dice el nombre
+• `/dbcleanup`: eliminar cuentas y grupos eliminados de la base de datos
 
-Visit @{SUPPORT_CHAT} for more information.
+Visite @{SUPPORT_CHAT} para obtener más información.
 """
 
 SUDO_HANDLER = CommandHandler(("addsudo"), addsudo, run_async=True)
@@ -511,7 +511,7 @@ dispatcher.add_handler(SUPPORTLIST_HANDLER)
 dispatcher.add_handler(SUDOLIST_HANDLER)
 dispatcher.add_handler(DEVLIST_HANDLER)
 
-__mod_name__ = "God Mode"
+__mod_name__ = "Modo de Dios"
 __handlers__ = [
     SUDO_HANDLER,
     SUPPORT_HANDLER,
