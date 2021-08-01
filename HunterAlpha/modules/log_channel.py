@@ -87,7 +87,7 @@ if is_module_loaded(FILENAME):
         except BadRequest as excp:
             if excp.message == "Chat not found":
                 bot.send_message(
-                    orig_chat_id, "This log channel has been deleted - unsetting."
+                    orig_chat_id, "Este canal de registro ha sido eliminado - desarmado."
                 )
                 sql.stop_chat_logging(orig_chat_id)
             else:
@@ -98,7 +98,7 @@ if is_module_loaded(FILENAME):
                 bot.send_message(
                     log_chat_id,
                     result
-                    + "\n\nFormatting has been disabled due to an unexpected error.",
+                    + "\n\nEl formateo se ha deshabilitado debido a un error inesperado.",
                 )
 
     @user_admin
@@ -111,13 +111,13 @@ if is_module_loaded(FILENAME):
         if log_channel:
             log_channel_info = bot.get_chat(log_channel)
             message.reply_text(
-                f"This group has all it's logs sent to:"
+                f"Este grupo tiene todos sus registros enviados a:"
                 f" {escape_markdown(log_channel_info.title)} (`{log_channel}`)",
                 parse_mode=ParseMode.MARKDOWN,
             )
 
         else:
-            message.reply_text("No log channel has been set for this group!")
+            message.reply_text("No se ha establecido ningún canal de registro para este grupo!")
 
     @user_admin
     def setlog(update: Update, context: CallbackContext):
@@ -126,7 +126,7 @@ if is_module_loaded(FILENAME):
         chat = update.effective_chat
         if chat.type == chat.CHANNEL:
             message.reply_text(
-                "Now, forward the /setlog to the group you want to tie this channel to!"
+                "Ahora, reenvíe el /setlog al grupo al que desea vincular este canal!"
             )
 
         elif message.forward_from_chat:
@@ -134,32 +134,32 @@ if is_module_loaded(FILENAME):
             try:
                 message.delete()
             except BadRequest as excp:
-                if excp.message == "Message to delete not found":
+                if excp.message == "Mensaje para eliminar no encontrado":
                     pass
                 else:
                     LOGGER.exception(
-                        "Error deleting message in log channel. Should work anyway though."
+                        "Error al eliminar el mensaje en el canal de registro. Aunque debería funcionar de todos modos."
                     )
 
             try:
                 bot.send_message(
                     message.forward_from_chat.id,
-                    f"This channel has been set as the log channel for {chat.title or chat.first_name}.",
+                    f"Este canal se ha configurado como canal de registro para {chat.title or chat.first_name}.",
                 )
             except Unauthorized as excp:
-                if excp.message == "Forbidden: bot is not a member of the channel chat":
-                    bot.send_message(chat.id, "Successfully set log channel!")
+                if excp.message == "Prohibido: el bot no es miembro del chat del canal.":
+                    bot.send_message(chat.id, "Configurar correctamente el canal de registro!")
                 else:
-                    LOGGER.exception("ERROR in setting the log channel.")
+                    LOGGER.exception("ERROR en la configuración del canal de registro.")
 
-            bot.send_message(chat.id, "Successfully set log channel!")
+            bot.send_message(chat.id, "Configurar correctamente el canal de registro!")
 
         else:
             message.reply_text(
-                "The steps to set a log channel are:\n"
-                " - add bot to the desired channel\n"
-                " - send /setlog to the channel\n"
-                " - forward the /setlog to the group\n"
+                "Los pasos para configurar un canal de registro son:\n"
+                " - agregar bot al canal deseado\n"
+                " - enviar /setlog al canal\n"
+                " - reenviar el /setlog al grupo\n"
             )
 
     @user_admin
@@ -171,15 +171,15 @@ if is_module_loaded(FILENAME):
         log_channel = sql.stop_chat_logging(chat.id)
         if log_channel:
             bot.send_message(
-                log_channel, f"Channel has been unlinked from {chat.title}"
+                log_channel, f"El canal se ha desvinculado de {chat.title}"
             )
-            message.reply_text("Log channel has been un-set.")
+            message.reply_text("El canal de registro se ha anulado.")
 
         else:
-            message.reply_text("No log channel has been set yet!")
+            message.reply_text("Aún no se ha establecido ningún canal de registro!")
 
     def __stats__():
-        return f"• {sql.num_logchannels()} log channels set."
+        return f"• {sql.num_logchannels()} conjunto de canales de registro."
 
     def __migrate__(old_chat_id, new_chat_id):
         sql.migrate_chat(old_chat_id, new_chat_id)
@@ -188,22 +188,22 @@ if is_module_loaded(FILENAME):
         log_channel = sql.get_chat_log_channel(chat_id)
         if log_channel:
             log_channel_info = dispatcher.bot.get_chat(log_channel)
-            return f"This group has all it's logs sent to: {escape_markdown(log_channel_info.title)} (`{log_channel}`)"
-        return "No log channel is set for this group!"
+            return f"Este grupo tiene todos sus registros enviados a: {escape_markdown(log_channel_info.title)} (`{log_channel}`)"
+        return "No se ha establecido ningún canal de registro para este grupo!"
 
     __help__ = """
-*Admins only:*
-• `/logchannel`*:* get log channel info
-• `/setlog`*:* set the log channel.
-• `/unsetlog`*:* unset the log channel.
+*Solo administradores:*
+• `/logchannel`*:* obtener información del canal de registro
+• `/setlog`*:* establecer el canal de registro.
+• `/unsetlog`*:* desarmar el canal de registro.
 
-Setting the log channel is done by:
-• adding the bot to the desired channel (as an admin!)
-• sending `/setlog` in the channel
-• forwarding the `/setlog` to the group
+La configuración del canal de registro se realiza mediante:
+• agregando el bot al canal deseado (¡como administrador!)
+• enviando `/setlog` en el canal
+• reenviando el `/setlog` al grupo
 """
 
-    __mod_name__ = "Log Channels"
+    __mod_name__ = "Canal-registro"
 
     LOG_HANDLER = CommandHandler("logchannel", logging, run_async=True)
     SET_LOG_HANDLER = CommandHandler("setlog", setlog, run_async=True)
