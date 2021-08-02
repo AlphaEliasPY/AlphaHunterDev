@@ -1,5 +1,5 @@
-from MinatoNamikaze.event import register
-from MinatoNamikaze import telethn as tbot
+from HunterAlpha.event import register
+from HunterAlpha import telethn as tbot
 TMP_DOWNLOAD_DIRECTORY = "./"
 from telethon import events
 import os
