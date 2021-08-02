@@ -585,7 +585,7 @@ ser útil al actualizar una nota actual
 *Solo administradores:*
  • `/save <nombredeNota> <notedatos>`*:* guarda los datos de la nota como una nota con el nombre de la nota
 Se puede agregar un botón a una nota utilizando la sintaxis de enlace de rebajas estándar; el enlace debe ir precedido de un \
-`buttonurl:` sección, como tal: `[somelink](buttonurl:example.com)`. Cheque [Ayuda](https://telegra.ph/%F0%9D%94%BC%F0%9D%95%9D-%F0%9D%94%B9%F0%9D%95%A3%F0%9D%95%A0%F0%9D%95%9E%F0%9D%95%92%F0%9D%95%A4-08-02-2)` para más información
+`buttonurl:` sección, como tal: `[somelink](buttonurl:example.com)`. Cheque [Ayuda](https://telegra.ph/%F0%9D%94%BC%F0%9D%95%9D-%F0%9D%94%B9%F0%9D%95%A3%F0%9D%95%A0%F0%9D%95%9E%F0%9D%95%92%F0%9D%95%A4-08-02-2) para más información.
  • `/save <notename>`*:* guarda el mensaje respondido como una nota con el nombre notename
  Separe las respuestas de diferencias por `%%%` para obtener notas aleatorias
  *Ejemplo:* 
