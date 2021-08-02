@@ -14,22 +14,22 @@ def privatenotes(update: Update, context: CallbackContext):
     msg = ""
 
     if message.chat.type == "private":
-        msg = "This command is meant to use in group not in PM"
+        msg = "Este comando está destinado a usarse en grupo, no en PM"
 
     elif len(args) == 0:
         setting = getprivatenotes(chat.id)
-        msg = f"Private notes value is *{setting}* in *{chat.title}*"
+        msg = f"El valor de las notas privadas es *{setting}* in *{chat.title}*"
 
     elif len(args) >= 1:
         val = args[0].lower()
         if val in ["off", "no", "0", "disable", "false"]:
             setprivatenotes(chat.id, False)
-            msg = f"Private notes has been disabled in *{chat.title}*"
+            msg = f"Las notas privadas se han inhabilitado en *{chat.title}*"
         elif val in ["on", "yes", "1", "enable", "true"]:
             setprivatenotes(chat.id, True)
-            msg = f"Private notes has been enabled in *{chat.title}*"
+            msg = f"Las notas privadas se han habilitado en *{chat.title}*"
         else: 
-            msg = "Sorry, wrong value"
+            msg = "Lo siento, valor incorrecto"
 
     message.reply_text(
         text = msg,
