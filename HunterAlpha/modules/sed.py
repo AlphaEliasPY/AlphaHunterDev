@@ -70,7 +70,7 @@ def sed(update: Update, context: CallbackContext):
         repl, repl_with, flags = sed_result
         if not repl:
             update.effective_message.reply_to_message.reply_text(
-                "You're trying to replace... " "nothing with something?"
+                "Estas tratando de reemplazar... " "nada con algo?"
             )
             return
 
@@ -81,7 +81,7 @@ def sed(update: Update, context: CallbackContext):
                 return
             if infinite_loop_check(repl):
                 update.effective_message.reply_text(
-                    "I'm afraid I can't run that regex."
+                    "Me temo que no puedo ejecutar esa expresión regular."
                 )
                 return
             if "i" in flags and "g" in flags:
@@ -102,13 +102,13 @@ def sed(update: Update, context: CallbackContext):
         except sre_constants.error:
             LOGGER.warning(update.effective_message.text)
             LOGGER.exception("SRE constant error")
-            update.effective_message.reply_text("Do you even sed? Apparently not.")
+            update.effective_message.reply_text("Incluso sed? Aparentemente no.")
             return
 
         # empty string errors -_-
         if len(text) >= telegram.MAX_MESSAGE_LENGTH:
             update.effective_message.reply_text(
-                "The result of the sed command was too long for \
+                "El resultado del comando sed fue demasiado largo para \
                                                  telegram!"
             )
         elif text:
@@ -116,13 +116,13 @@ def sed(update: Update, context: CallbackContext):
 
 
 __help__ = """
- • `s/<text1>/<text2>(/<flag>)`*:* Reply to a message with this to perform a sed operation on that message, replacing all \
-occurrences of 'text1' with 'text2'. Flags are optional, and currently include 'i' for ignore case, 'g' for global, \
-or nothing. Delimiters include `/`, `_`, `|`, and `:`. Text grouping is supported. The resulting message cannot be \
-larger than {}.
-*Reminder:* Sed uses some special characters to make matching easier, such as these: `+*.?\\`
-If you want to use these characters, make sure you escape them!
-*Example:* \\?.
+ • `s/<text1>/<text2>(/<flag>)`*:* Responda a un mensaje con esto para realizar una operación sed en ese mensaje, reemplazando todos \
+apariciones de 'text1' con 'text2'. Las banderas son opcionales y actualmente incluyen 'i' para ignorar mayúsculas y minúsculas, 'g' para global, \
+o nada. Los delimitadores incluyen `/`, `_`,` | `y`: `. Se admite la agrupación de texto. El mensaje resultante no puede ser \
+mayor que {}.
+*Recordatorio:* Sed utiliza algunos caracteres especiales para facilitar la combinación, como estos: `+*.?\\`
+Si quieres usar estos personajes, asegúrate de escapar de ellos.!
+*Ejemplo:* \\?.
 """.format(
     telegram.MAX_MESSAGE_LENGTH
 )
