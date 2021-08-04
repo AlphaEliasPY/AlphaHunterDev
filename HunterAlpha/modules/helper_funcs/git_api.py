@@ -3,7 +3,7 @@ import json
 import datetime
 
 VERSION = "1.1.0"
-APIURL = "http://api.github.com/repos/"
+APIURL = f'https://api.github.com/users/{username}'
 
 
 def vercheck() -> str:
