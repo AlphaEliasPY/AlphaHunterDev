@@ -1,8 +1,12 @@
 import aiohttp
-from telegram import filters
-from HuntarAlpha import pbot
-from HunterAlpha.pyrogramee.errors import capture_err
-
+from telegram import import HunterAlpha.modules.helper_funcs.git_api as api
+import HunterAlpha.modules.sql.github_sql as sql
+from HunterAlpha.modules.sql.clear_cmd_sql import get_clearcmd
+from HunterAlpha import dispatcher, OWNER_ID, EVENT_LOGS, SUDO_USERS, SUPPORT_USERS
+from HunterAlpha.modules.helper_funcs.filters import CustomFilters
+from HunterAlpha.modules.helper_funcs.chat_status import user_admin
+from HunterAlpha.modules.helper_funcs.misc import delete
+from HunterAlpha.modules.disable import DisableAbleCommandHandler
 
 __mod_name__ = "Github"
 
