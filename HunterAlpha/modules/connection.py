@@ -226,7 +226,7 @@ def connect_chat(update: Update, context: CallbackContext):
                     sql.add_history_conn(user.id, str(chat.id), chat_name)
                     context.bot.send_message(
                         update.effective_message.from_user.id,
-                        "Estas conectado a *{}*. \nUse `/help conexion` para comprobar los comandos disponibles.".format(
+                        "Estas conectado a *{}*. \n[Lista de Ayuda](https://telegra.ph/%F0%9D%94%BC%F0%9D%95%9D-%F0%9D%94%B9%F0%9D%95%A3%F0%9D%95%A0%F0%9D%95%9E%F0%9D%95%92%F0%9D%95%A4-08-04-2).".format(
                             chat_name
                         ),
                         parse_mode="markdown",
