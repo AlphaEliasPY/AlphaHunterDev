@@ -1,5 +1,5 @@
 import aiohttp
-from telegram import import HunterAlpha.modules.helper_funcs.git_api as api
+from telegram import HunterAlpha.modules.helper_funcs.git_api as api
 import HunterAlpha.modules.sql.github_sql as sql
 from HunterAlpha.modules.sql.clear_cmd_sql import get_clearcmd
 from HunterAlpha import dispatcher, OWNER_ID, EVENT_LOGS, SUDO_USERS, SUPPORT_USERS
