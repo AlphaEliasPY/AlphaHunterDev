@@ -1,5 +1,5 @@
 import aiohttp
-from pyrogram import filters
+from telegram import filters
 from HuntarAlpha import pbot
 from HunterAlpha.pyrogramee.errors import capture_err
 
