@@ -396,7 +396,7 @@ DISCONNECT_CHAT_HANDLER = CommandHandler("disconnect", disconnect_chat, run_asyn
 ALLOW_CONNECTIONS_HANDLER = CommandHandler(
     "allowconnect", allow_connections, run_async=True
 )
-HELP_CONNECT_CHAT_HANDLER = CommandHandler("help_connect", help_connect_chat)
+HELP_CONNECT_CHAT_HANDLER = CommandHandler("help%connect", help_connect_chat)
 CONNECT_BTN_HANDLER = CallbackQueryHandler(connect_button, pattern=r"connect", run_async=True)
 
 dispatcher.add_handler(CONNECT_CHAT_HANDLER)
