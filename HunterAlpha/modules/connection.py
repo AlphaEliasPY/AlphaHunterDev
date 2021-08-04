@@ -126,7 +126,7 @@ def connect_chat(update: Update, context: CallbackContext):
                     chat_name = conn_chat.title
                     send_message(
                         update.effective_message,
-                        "Successfully connected to *{}*. \nUse [Ayuda de Conexion] (https://telegra.ph/%E2%84%8D%F0%9D%95%A6%F0%9D%95%9F%F0%9D%95%A5%F0%9D%95%96%F0%9D%95%A3%F0%9D%94%B8%F0%9D%95%9D%F0%9D%95%A1%F0%9D%95%99%F0%9D%95%92-08-04)".format(
+                        "Successfully connected to *{}*. \nUse [Ayuda de Conexion](https://telegra.ph/%E2%84%8D%F0%9D%95%A6%F0%9D%95%9F%F0%9D%95%A5%F0%9D%95%96%F0%9D%95%A3%F0%9D%94%B8%F0%9D%95%9D%F0%9D%95%A1%F0%9D%95%99%F0%9D%95%92-08-04) ".format(
                             chat_name
                         ),
                         parse_mode=ParseMode.MARKDOWN,
@@ -224,7 +224,7 @@ def connect_chat(update: Update, context: CallbackContext):
                     sql.add_history_conn(user.id, str(chat.id), chat_name)
                     context.bot.send_message(
                         update.effective_message.from_user.id,
-                        "You are connected to *{}*. \nUse [Ayuda de Conexion] (https://telegra.ph/%E2%84%8D%F0%9D%95%A6%F0%9D%95%9F%F0%9D%95%A5%F0%9D%95%96%F0%9D%95%A3%F0%9D%94%B8%F0%9D%95%9D%F0%9D%95%A1%F0%9D%95%99%F0%9D%95%92-08-04)".format(
+                        "You are connected to *{}*. \nUse [Ayuda de Conexion](https://telegra.ph/%E2%84%8D%F0%9D%95%A6%F0%9D%95%9F%F0%9D%95%A5%F0%9D%95%96%F0%9D%95%A3%F0%9D%94%B8%F0%9D%95%9D%F0%9D%95%A1%F0%9D%95%99%F0%9D%95%92-08-04) ".format(
                             chat_name
                         ),
                         parse_mode="markdown",
