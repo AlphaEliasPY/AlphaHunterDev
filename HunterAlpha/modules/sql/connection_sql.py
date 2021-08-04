@@ -1,9 +1,7 @@
 import threading
 import time
 from typing import Union
-
 from sqlalchemy import Column, String, Boolean, UnicodeText, Integer
-
 from HunterAlpha.modules.sql import SESSION, BASE
 
 
@@ -29,7 +27,7 @@ class Connection(BASE):
 
     def __init__(self, user_id, chat_id):
         self.user_id = user_id
-        self.chat_id = str(chat_id)  # Ensure String
+        self.chat_id = str(chat_id)
 
 
 class ConnectionHistory(BASE):
