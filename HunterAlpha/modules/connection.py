@@ -126,7 +126,7 @@ def connect_chat(update: Update, context: CallbackContext):
                     chat_name = conn_chat.title
                     send_message(
                         update.effective_message,
-                        "Successfully connected to *{}*. \nUse /helpconnect to check available commands.".format(
+                        "Successfully connected to *{}*. \nUse /help connect to check available commands.".format(
                             chat_name
                         ),
                         parse_mode=ParseMode.MARKDOWN,
@@ -224,7 +224,7 @@ def connect_chat(update: Update, context: CallbackContext):
                     sql.add_history_conn(user.id, str(chat.id), chat_name)
                     context.bot.send_message(
                         update.effective_message.from_user.id,
-                        "You are connected to *{}*. \nUse `/helpconnect` to check available commands.".format(
+                        "You are connected to *{}*. \nUse `/help connect` to check available commands.".format(
                             chat_name
                         ),
                         parse_mode="markdown",
@@ -346,7 +346,7 @@ def connect_button(update: Update, context: CallbackContext):
                 )
                 chat_name = conn_chat.title
                 query.message.edit_text(
-                    "Successfully connected to *{}*. \nUse `/helpconnect` to check available commands.".format(
+                    "Successfully connected to *{}*. \nUse `/help connect` to check available commands.".format(
                         chat_name
                     ),
                     parse_mode=ParseMode.MARKDOWN,
