@@ -3,10 +3,10 @@ import re
 from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton, Update, Bot
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import CommandHandler, CallbackQueryHandler, CallbackContext, run_async
-import MinatoNamikaze.modules.sql.connection_sql as sql
+import HunterAlpha.modules.sql.connection_sql as sql
 from MinatoNamikaze import dispatcher, SUDO_USERS, DEV_USERS
-from MinatoNamikaze.modules.helper_funcs import chat_status
-from MinatoNamikaze.modules.helper_funcs.alternate import send_message, typing_action
+from HunterApha.modules.helper_funcs import chat_status
+from HunterAlpha.modules.helper_funcs.alternate import send_message, typing_action
 
 user_admin = chat_status.user_admin
 
