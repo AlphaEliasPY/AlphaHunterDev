@@ -65,7 +65,7 @@ RUN apt update && apt upgrade -y && \
 RUN pip3 install --upgrade pip setuptools
 
 # Copy Python Requirements to /root/HunterAlpha
-RUN git clone -b shiken https://github.com/AlphaEliasPY/AlphaHunterDev /root/HunterAlpha
+RUN git clone -b shiken https://github.com/DarkGod14/DarkGod14Bot /root/HunterAlpha
 WORKDIR /root/HunterAlpha
 
 #Copy config file to /root/HunterAlpha/HunterAlpha
