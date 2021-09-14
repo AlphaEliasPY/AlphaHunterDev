@@ -32,4 +32,4 @@ Now send the bot /start, If it doesn't respond go to https://dashboard.heroku.co
 
 </details>  
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new?template=https%3A%2F%2Fgithub.com%2Frailwayapp%2Fexamples%2Ftree%2Fmaster%2Fexamples%2Ftelegram-bot&envs=TELEGRAM_BOT_TOKEN)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new?template=https%3A%2F%2Fgithub.com%2AlphaEliasPy%2FAlphaHunterDev&plugins=postgresql&envs=TELEGRAM_BOT_TOKEN%API_ID)
