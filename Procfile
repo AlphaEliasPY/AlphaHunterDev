@@ -1,2 +1,2 @@
-web: python3 -m HunterAlpha
-ps:scale web=1
+worker: python3 -m HunterAlpha
+ps:scale worker=1
