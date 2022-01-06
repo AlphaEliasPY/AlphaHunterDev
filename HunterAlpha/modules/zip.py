@@ -5,7 +5,6 @@ import zipfile
 from telethon import types
 from telethon.tl import functions
 
-from HunterAlpha import TEMP_DOWNLOAD_DIRECTORY
 from HunterAlpha import telethn as client
 from HunterAlpha.event import register
 
