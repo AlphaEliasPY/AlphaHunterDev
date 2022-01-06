@@ -1,7 +1,9 @@
 import threading
 import time
 from typing import Union
-from sqlalchemy import Column, String, Boolean, UnicodeText, Integer
+
+from sqlalchemy import Column, String, Boolean, UnicodeText, Integer, BigInteger
+
 from HunterAlpha.modules.sql import SESSION, BASE
 
 
@@ -22,17 +24,17 @@ class ChatAccessConnectionSettings(BASE):
 
 class Connection(BASE):
     __tablename__ = "connection"
-    user_id = Column(Integer, primary_key=True)
+    user_id = Column(BigInteger, primary_key=True)
     chat_id = Column(String(14))
 
     def __init__(self, user_id, chat_id):
         self.user_id = user_id
-        self.chat_id = str(chat_id)
+        self.chat_id = str(chat_id)  # Ensure String
 
 
 class ConnectionHistory(BASE):
     __tablename__ = "connection_history"
-    user_id = Column(Integer, primary_key=True)
+    user_id = Column(BigInteger, primary_key=True)
     chat_id = Column(String(14), primary_key=True)
     chat_name = Column(UnicodeText)
     conn_time = Column(Integer)
