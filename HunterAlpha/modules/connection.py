@@ -1,8 +1,10 @@
 import time
 import re
+
 from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton, Update, Bot
 from telegram.error import BadRequest, Unauthorized
 from telegram.ext import CommandHandler, CallbackQueryHandler, CallbackContext, run_async
+
 import HunterAlpha.modules.sql.connection_sql as sql
 from HunterAlpha import dispatcher, SUDO_USERS, DEV_USERS
 from HunterAlpha.modules.helper_funcs import chat_status
@@ -126,7 +128,7 @@ def connect_chat(update: Update, context: CallbackContext):
                     chat_name = conn_chat.title
                     send_message(
                         update.effective_message,
-                        "Successfully connected to *{}*. \nUse [Ayuda de Conexion](https://telegra.ph/%E2%84%8D%F0%9D%95%A6%F0%9D%95%9F%F0%9D%95%A5%F0%9D%95%96%F0%9D%95%A3%F0%9D%94%B8%F0%9D%95%9D%F0%9D%95%A1%F0%9D%95%99%F0%9D%95%92-08-04) ".format(
+                        "Successfully connected to *{}*. \nUse /helpconnect to check available commands.".format(
                             chat_name
                         ),
                         parse_mode=ParseMode.MARKDOWN,
@@ -224,7 +226,7 @@ def connect_chat(update: Update, context: CallbackContext):
                     sql.add_history_conn(user.id, str(chat.id), chat_name)
                     context.bot.send_message(
                         update.effective_message.from_user.id,
-                        "You are connected to *{}*. \nUse [Ayuda de Conexion](https://telegra.ph/%E2%84%8D%F0%9D%95%A6%F0%9D%95%9F%F0%9D%95%A5%F0%9D%95%96%F0%9D%95%A3%F0%9D%94%B8%F0%9D%95%9D%F0%9D%95%A1%F0%9D%95%99%F0%9D%95%92-08-04) ".format(
+                        "You are connected to *{}*. \nUse `/helpconnect` to check available commands.".format(
                             chat_name
                         ),
                         parse_mode="markdown",
@@ -384,7 +386,7 @@ This allows you to connect to a chat's database, and add things to it without th
  • `/connect`: Connects to chat (Can be done in a group by `/connect` or `/connect <chat id>` in PM)
  • `/connection`: List connected chats
  • `/disconnect`: Disconnect from a chat
- • `/help connect`: List available commands that can be used remotely
+ • `/helpconnect`: List available commands that can be used remotely
 
 *Admin only:*
  • `/allowconnect <yes/no>`: allow a user to connect to a chat
@@ -396,7 +398,7 @@ DISCONNECT_CHAT_HANDLER = CommandHandler("disconnect", disconnect_chat, run_asyn
 ALLOW_CONNECTIONS_HANDLER = CommandHandler(
     "allowconnect", allow_connections, run_async=True
 )
-HELP_CONNECT_CHAT_HANDLER = CommandHandler("helpConnect", help_connect_chat)
+HELP_CONNECT_CHAT_HANDLER = CommandHandler("helpconnect", help_connect_chat)
 CONNECT_BTN_HANDLER = CallbackQueryHandler(connect_button, pattern=r"connect", run_async=True)
 
 dispatcher.add_handler(CONNECT_CHAT_HANDLER)
