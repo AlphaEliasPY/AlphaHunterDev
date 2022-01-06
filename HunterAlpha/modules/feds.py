@@ -89,12 +89,12 @@ def new_fed(update: Update, context: CallbackContext):
     message = update.effective_message
     if chat.type != "private":
         update.effective_message.reply_text(
-            "Federations can only be created by privately messaging me."
+            "Las federaciones solo se pueden crear enviándome un mensaje privado."
         )
         return
     if len(message.text) == 1:
         send_message(
-            update.effective_message, "Please write the name of the federation!"
+            update.effective_message, "¡Escriba el nombre de la federación!"
         )
         return
     fednam = message.text.split(None, 1)[1]
@@ -110,29 +110,29 @@ def new_fed(update: Update, context: CallbackContext):
         x = sql.new_fed(user.id, fed_name, fed_id)
         if not x:
             update.effective_message.reply_text(
-                f"Can't federate! Please contact @{SUPPORT_CHAT} if the problem persist."
+                f"¡No se puede federar! Por favor contactar @{SUPPORT_CHAT} si el problema persiste."
             )
             return
 
         update.effective_message.reply_text(
-            "*You have succeeded in creating a new federation!*"
+            "*Has logrado crear una nueva federación!*"
             "\nName: `{}`"
             "\nID: `{}`"
-            "\n\nUse the command below to join the federation:"
+            "\n\nUtilice el siguiente comando para unirse a la federación:"
             "\n`/joinfed {}`".format(fed_name, fed_id, fed_id),
             parse_mode=ParseMode.MARKDOWN,
         )
         try:
             bot.send_message(
                 EVENT_LOGS,
-                "New Federation: <b>{}</b>\nID: <pre>{}</pre>".format(fed_name, fed_id),
+                "Nueva federación: <b>{}</b>\nID: <pre>{}</pre>".format(fed_name, fed_id),
                 parse_mode=ParseMode.HTML,
             )
         except:
             LOGGER.warning("Cannot send a message to EVENT_LOGS")
     else:
         update.effective_message.reply_text(
-            "Please write down the name of the federation"
+            "Por favor escriba el nombre de la federación."
         )
 
 
@@ -142,41 +142,41 @@ def del_fed(update: Update, context: CallbackContext):
     user = update.effective_user
     if chat.type != "private":
         update.effective_message.reply_text(
-            "Federations can only be deleted by privately messaging me."
+            "Las federaciones solo se pueden eliminar enviándome un mensaje privado."
         )
         return
     if args:
         is_fed_id = args[0]
         getinfo = sql.get_fed_info(is_fed_id)
         if getinfo is False:
-            update.effective_message.reply_text("This federation does not exist.")
+            update.effective_message.reply_text("Esta federación no existe.")
             return
         if int(getinfo["owner"]) == int(user.id) or int(user.id) == OWNER_ID:
             fed_id = is_fed_id
         else:
-            update.effective_message.reply_text("Only federation owners can do this!")
+            update.effective_message.reply_text("Solo los propietarios de federaciones pueden hacer esto!")
             return
     else:
-        update.effective_message.reply_text("What should I delete?")
+        update.effective_message.reply_text("Que debo borrar?")
         return
 
     if is_user_fed_owner(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only federation owners can do this!")
+        update.effective_message.reply_text("Solo los propietarios de federaciones pueden hacer esto!")
         return
 
     update.effective_message.reply_text(
-        "You sure you want to delete your federation? This cannot be reverted, you will lose your entire ban list, and '{}' will be permanently lost.".format(
+        "¿Seguro que quiere eliminar su federación? Esto no se puede revertir, perderá toda su lista de prohibición y '{}' se perderá permanentemente.".format(
             getinfo["fname"]
         ),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        text="⚠️ Delete Federation ⚠️",
+                        text="⚠️ Eliminar federación ⚠️",
                         callback_data="rmfed_{}".format(fed_id),
                     )
                 ],
-                [InlineKeyboardButton(text="Cancel", callback_data="rmfed_cancel")],
+                [InlineKeyboardButton(text="❌ Cancelar ❌", callback_data="rmfed_cancel")],
             ]
         ),
     )
@@ -188,19 +188,19 @@ def rename_fed(update: Update, context: CallbackContext):
     args = msg.text.split(None, 2)
 
     if len(args) < 3:
-        return msg.reply_text("usage: /renamefed <fed_id> <newname>")
+        return msg.reply_text("Use: /renamefed <fed_id> <newname>")
 
     fed_id, newname = args[1], args[2]
     verify_fed = sql.get_fed_info(fed_id)
 
     if not verify_fed:
-        return msg.reply_text("This fed does not exist in my database!")
+        return msg.reply_text("Este feed no existe en mi base de datos!")
 
     if is_user_fed_owner(fed_id, user.id):
         sql.rename_fed(fed_id, user.id, newname)
-        msg.reply_text(f"Successfully renamed your fed name to {newname}!")
+        msg.reply_text(f"Se renombró correctamente el nombre de su feed a {newname}!")
     else:
-        msg.reply_text("Only federation owner can do this!")
+        msg.reply_text("Solo el propietario de la federación puede hacer esto!")
 
 
 def fed_chat(update: Update, context: CallbackContext):
@@ -212,19 +212,19 @@ def fed_chat(update: Update, context: CallbackContext):
     user_id = update.effective_message.from_user.id
     if not is_user_admin(update.effective_chat, user_id):
         update.effective_message.reply_text(
-            "You must be an admin to execute this command"
+            "Debe ser administrador para ejecutar este comando"
         )
         return
 
     if not fed_id:
-        update.effective_message.reply_text("This group is not in any federation!")
+        update.effective_message.reply_text("Este grupo no está en ninguna federación!")
         return
 
     user = update.effective_user
     chat = update.effective_chat
     info = sql.get_fed_info(fed_id)
 
-    text = "This group is part of the following federation:"
+    text = "Este grupo es parte de la siguiente federación:"
     text += "\n{} (ID: <code>{}</code>)".format(info["fname"], fed_id)
 
     update.effective_message.reply_text(text, parse_mode=ParseMode.HTML)
@@ -238,7 +238,7 @@ def join_fed(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -256,23 +256,23 @@ def join_fed(update: Update, context: CallbackContext):
                     pass
                 else:
                     update.effective_message.reply_text(
-                        "Only group creators can use this command!"
+                        "Solo los creadores de grupos pueden usar este comando!"
                     )
                     return
     if fed_id:
-        message.reply_text("You cannot join two federations from one chat")
+        message.reply_text("No puedes unirte a dos federaciones desde un chat")
         return
 
     if len(args) >= 1:
         getfed = sql.search_fed_by_id(args[0])
         if getfed is False:
-            message.reply_text("Please enter a valid federation ID")
+            message.reply_text("Ingrese un ID de federación válido")
             return
 
         x = sql.chat_join_fed(args[0], chat.title, chat.id)
         if not x:
             message.reply_text(
-                f"Failed to join federation! Please contact @{SUPPORT_CHAT} if this problem persists!"
+                f"¡No se pudo unir a la federación! Por favor contactar @{SUPPORT_CHAT} si este problema persiste!"
             )
             return
 
@@ -281,14 +281,14 @@ def join_fed(update: Update, context: CallbackContext):
             if ast.literal_eval(get_fedlog):
                 bot.send_message(
                     get_fedlog,
-                    "Chat *{}* has joined the federation *{}*".format(
+                    "Chat *{}* se ha unido a la federación *{}*".format(
                         chat.title, getfed["fname"]
                     ),
                     parse_mode="markdown",
                 )
 
         message.reply_text(
-            "This group has joined the federation: {}!".format(getfed["fname"])
+            "Este grupo se ha unido a la federación: {}!".format(getfed["fname"])
         )
 
 
@@ -300,7 +300,7 @@ def leave_fed(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -316,21 +316,21 @@ def leave_fed(update: Update, context: CallbackContext):
                 if ast.literal_eval(get_fedlog):
                     bot.send_message(
                         get_fedlog,
-                        "Chat *{}* has left the federation *{}*".format(
+                        "Chat *{}* ha dejado la federación *{}*".format(
                             chat.title, fed_info["fname"]
                         ),
                         parse_mode="markdown",
                     )
             send_message(
                 update.effective_message,
-                "This group has left the federation {}!".format(fed_info["fname"]),
+                "Este grupo ha abandonado la federación {}!".format(fed_info["fname"]),
             )
         else:
             update.effective_message.reply_text(
-                "How can you leave a federation that you never joined?!"
+                "¿Cómo puedes dejar una federación a la que nunca te uniste?!"
             )
     else:
-        update.effective_message.reply_text("Only group creators can use this command!")
+        update.effective_message.reply_text("Solo los creadores de grupos pueden usar este comando!")
 
 
 def user_join_fed(update: Update, context: CallbackContext):
@@ -342,7 +342,7 @@ def user_join_fed(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -363,7 +363,7 @@ def user_join_fed(update: Update, context: CallbackContext):
                 and not msg.parse_entities([MessageEntity.TEXT_MENTION])
             )
         ):
-            msg.reply_text("I cannot extract user from this message")
+            msg.reply_text("No puedo extraer al usuario de este mensaje")
             return
         else:
             LOGGER.warning("error")
@@ -374,26 +374,26 @@ def user_join_fed(update: Update, context: CallbackContext):
         get_owner = bot.get_chat(get_owner).id
         if user_id == get_owner:
             update.effective_message.reply_text(
-                "You do know that the user is the federation owner, right? RIGHT?"
+                "Sabes que el usuario es el propietario de la federación, ¿derecho? ¿DERECHO?"
             )
             return
         if getuser:
             update.effective_message.reply_text(
-                "I cannot promote users who are already federation admins! Can remove them if you want!"
+                "¡No puedo promover usuarios que ya son administradores de la federación! Puedes eliminarlos si quieres!"
             )
             return
         if user_id == bot.id:
             update.effective_message.reply_text(
-                "I already am a federation admin in all federations!"
+                "Ya soy administrador de una federación en todas las federaciones!"
             )
             return
         res = sql.user_join_fed(fed_id, user_id)
         if res:
-            update.effective_message.reply_text("Successfully Promoted!")
+            update.effective_message.reply_text("Promocionado con éxito!")
         else:
-            update.effective_message.reply_text("Failed to promote!")
+            update.effective_message.reply_text("No se pudo promover!")
     else:
-        update.effective_message.reply_text("Only federation owners can do this!")
+        update.effective_message.reply_text("Solo los propietarios de federaciones pueden hacer esto!")
 
 
 def user_demote_fed(update: Update, context: CallbackContext):
@@ -404,7 +404,7 @@ def user_demote_fed(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -428,30 +428,30 @@ def user_demote_fed(update: Update, context: CallbackContext):
                 and not msg.parse_entities([MessageEntity.TEXT_MENTION])
             )
         ):
-            msg.reply_text("I cannot extract user from this message")
+            msg.reply_text("No puedo extraer al usuario de este mensaje")
             return
         else:
             LOGGER.warning("error")
 
         if user_id == bot.id:
             update.effective_message.reply_text(
-                "The thing you are trying to demote me from will fail to work without me! Just saying."
+                "¡La cosa de la que estás tratando de degradarme no funcionará sin mí! Solo digo."
             )
             return
 
         if sql.search_user_in_fed(fed_id, user_id) is False:
             update.effective_message.reply_text(
-                "I cannot demote people who are not federation admins!"
+                "No puedo degradar a las personas que no son administradores de la federación!"
             )
             return
 
         res = sql.user_demote_fed(fed_id, user_id)
         if res is True:
-            update.effective_message.reply_text("Demoted from a Fed Admin!")
+            update.effective_message.reply_text("Degradado de un administrador de la Fed!")
         else:
-            update.effective_message.reply_text("Demotion failed!")
+            update.effective_message.reply_text("Degradación fallida!")
     else:
-        update.effective_message.reply_text("Only federation owners can do this!")
+        update.effective_message.reply_text("Solo los propietarios de federaciones pueden hacer esto!")
         return
 
 
@@ -465,19 +465,19 @@ def fed_info(update: Update, context: CallbackContext):
     else:
         if chat.type == 'private':
             send_message(
-                update.effective_message, "You need to provide me a fedid to check fedinfo in my pm.",
+                update.effective_message, "Necesitas proporcionarme un fedid para verificar fedinfo en mi pm.",
             )
             return
         fed_id = sql.get_fed_id(chat.id)
         if not fed_id:
             send_message(
-                update.effective_message, "This group is not in any federation!"
+                update.effective_message, "Este grupo no está en ninguna federación!"
             )
             return
         info = sql.get_fed_info(fed_id)
 
     if is_user_fed_admin(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only a federation admin can do this!")
+        update.effective_message.reply_text("Solo un administrador de la federación puede hacer esto!")
         return
 
     owner = bot.get_chat(info["owner"])
@@ -492,15 +492,15 @@ def fed_info(update: Update, context: CallbackContext):
     chat = update.effective_chat
     info = sql.get_fed_info(fed_id)
 
-    text = "<b>ℹ️ Federation Information:</b>"
+    text = "<b>ℹ️ Información de la federación:</b>"
     text += "\nFedID: <code>{}</code>".format(fed_id)
-    text += "\nName: {}".format(info["fname"])
-    text += "\nCreator: {}".format(mention_html(owner.id, owner_name))
-    text += "\nAll Admins: <code>{}</code>".format(TotalAdminFed)
+    text += "\nNombre: {}".format(info["fname"])
+    text += "\nCreador: {}".format(mention_html(owner.id, owner_name))
+    text += "\nAll Administradores: <code>{}</code>".format(TotalAdminFed)
     getfban = sql.get_all_fban_users(fed_id)
-    text += "\nTotal banned users: <code>{}</code>".format(len(getfban))
+    text += "\nTotal de usuarios prohibidos: <code>{}</code>".format(len(getfban))
     getfchat = sql.all_fed_chats(fed_id)
-    text += "\nNumber of groups in this federation: <code>{}</code>".format(
+    text += "\nNúmero de grupos en esta federación: <code>{}</code>".format(
         len(getfchat)
     )
 
@@ -515,26 +515,26 @@ def fed_admin(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
     fed_id = sql.get_fed_id(chat.id)
 
     if not fed_id:
-        update.effective_message.reply_text("This group is not in any federation!")
+        update.effective_message.reply_text("Este grupo no está en ninguna federación!")
         return
 
     if is_user_fed_admin(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only federation admins can do this!")
+        update.effective_message.reply_text("Solo los administradores de la federación pueden hacer esto!")
         return
 
     user = update.effective_user
     chat = update.effective_chat
     info = sql.get_fed_info(fed_id)
 
-    text = "<b>Federation Admin {}:</b>\n\n".format(info["fname"])
-    text += "👑 Owner:\n"
+    text = "<b>Administrador de la federación {}:</b>\n\n".format(info["fname"])
+    text += "👑 Dueño:\n"
     owner = bot.get_chat(info["owner"])
     try:
         owner_name = owner.first_name + " " + owner.last_name
@@ -544,9 +544,9 @@ def fed_admin(update: Update, context: CallbackContext):
 
     members = sql.all_fed_members(fed_id)
     if len(members) == 0:
-        text += "\n🔱 There are no admins in this federation"
+        text += "\n🔱 No hay administradores en esta federación"
     else:
-        text += "\n🔱 Admin:\n"
+        text += "\n🔱 Administración:\n"
         for x in members:
             user = bot.get_chat(x)
             text += " • {}\n".format(mention_html(user.id, user.first_name))
@@ -562,7 +562,7 @@ def fed_ban(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -570,7 +570,7 @@ def fed_ban(update: Update, context: CallbackContext):
 
     if not fed_id:
         update.effective_message.reply_text(
-            "This group is not a part of any federation!"
+            "Este grupo no es parte de ninguna federación.!"
         )
         return
 
@@ -578,7 +578,7 @@ def fed_ban(update: Update, context: CallbackContext):
     getfednotif = sql.user_feds_report(info["owner"])
 
     if is_user_fed_admin(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only federation admins can do this!")
+        update.effective_message.reply_text("Solo los administradores de la federación pueden hacer esto!")
         return
 
     message = update.effective_message
@@ -588,37 +588,37 @@ def fed_ban(update: Update, context: CallbackContext):
     fban, fbanreason, fbantime = sql.get_fban_user(fed_id, user_id)
 
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user")
+        message.reply_text("Parece que no te refieres a un usuario")
         return
 
     if user_id == bot.id:
         message.reply_text(
-            "What is funnier than kicking the group creator? Self sacrifice."
+            "¿Qué es más divertido que patear al creador del grupo? Autosacrificio."
         )
         return
 
     if is_user_fed_owner(fed_id, user_id) is True:
-        message.reply_text("Why did you try the federation fban?")
+        message.reply_text("¿Por qué probaste la federación fban?")
         return
 
     if is_user_fed_admin(fed_id, user_id) is True:
-        message.reply_text("He is a federation admin, I can't fban him.")
+        message.reply_text("Es un administrador de la federación, no puedo fban de él.")
         return
 
     if user_id == OWNER_ID:
-        message.reply_text("God cannot be fed banned!")
+        message.reply_text("Dios no puede ser alimentado prohibido!")
         return
 
     if int(user_id) in SUDO_USERS:
-        message.reply_text("Sudo users cannot be fed banned!")
+        message.reply_text("Los usuarios de sudo no pueden ser alimentados prohibidos!")
         return
 
     if int(user_id) in WHITELIST_USERS:
-        message.reply_text("Whitelist users cannot be fed banned!")
+        message.reply_text("Los usuarios de la lista blanca no pueden ser alimentados prohibidos!")
         return
 
     if user_id in [777000, 1087968824]:
-        message.reply_text("Fool! You can't attack Telegram's native tech!")
+        message.reply_text("¡Tonto! No puedes atacar la tecnología nativa de Telegram!")
         return
 
     try:
@@ -633,7 +633,7 @@ def fed_ban(update: Update, context: CallbackContext):
             send_message(update.effective_message, excp.message)
             return
         elif len(str(user_id)) != 9:
-            send_message(update.effective_message, "That's not a user!")
+            send_message(update.effective_message, "Eso no es un usuario!")
             return
         isvalid = False
         fban_user_id = int(user_id)
@@ -642,7 +642,7 @@ def fed_ban(update: Update, context: CallbackContext):
         fban_user_uname = None
 
     if isvalid and user_chat.type != "private":
-        send_message(update.effective_message, "That's not a user!")
+        send_message(update.effective_message, "Eso no es un usuario!")
         return
 
     if isvalid:
@@ -661,7 +661,7 @@ def fed_ban(update: Update, context: CallbackContext):
 
         temp = sql.un_fban_user(fed_id, fban_user_id)
         if not temp:
-            message.reply_text("Failed to update the reason for fedban!")
+            message.reply_text("No se pudo actualizar el motivo de fedban!")
             return
         x = sql.fban_user(
             fed_id,
@@ -674,7 +674,7 @@ def fed_ban(update: Update, context: CallbackContext):
         )
         if not x:
             message.reply_text(
-                f"Failed to ban from the federation! If this problem continues, contact @{SUPPORT_CHAT}."
+                f"¡No se pudo prohibir de la federación! Si este problema continúa, comuníquese con @{SUPPORT_CHAT}."
             )
             return
 
@@ -840,7 +840,7 @@ def fed_ban(update: Update, context: CallbackContext):
     )
     if not x:
         message.reply_text(
-            f"Failed to ban from the federation! If this problem continues, contact @{SUPPORT_CHAT}."
+            f"¡No se pudo prohibir de la federación! Si este problema continúa, comuníquese con @{SUPPORT_CHAT}."
         )
         return
 
@@ -1000,7 +1000,7 @@ def unfban(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -1008,7 +1008,7 @@ def unfban(update: Update, context: CallbackContext):
 
     if not fed_id:
         update.effective_message.reply_text(
-            "This group is not a part of any federation!"
+            "Este grupo no es parte de ninguna federación.!"
         )
         return
 
@@ -1016,12 +1016,12 @@ def unfban(update: Update, context: CallbackContext):
     getfednotif = sql.user_feds_report(info["owner"])
 
     if is_user_fed_admin(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only federation admins can do this!")
+        update.effective_message.reply_text("Solo los administradores de la federación pueden hacer esto!")
         return
 
     user_id = extract_user_fban(message, args)
     if not user_id:
-        message.reply_text("You do not seem to be referring to a user.")
+        message.reply_text("No parece que se esté refiriendo a un usuario..")
         return
 
     try:
@@ -1036,7 +1036,7 @@ def unfban(update: Update, context: CallbackContext):
             send_message(update.effective_message, excp.message)
             return
         elif len(str(user_id)) != 9:
-            send_message(update.effective_message, "That's not a user!")
+            send_message(update.effective_message, "Eso no es un usuario!")
             return
         isvalid = False
         fban_user_id = int(user_id)
@@ -1045,7 +1045,7 @@ def unfban(update: Update, context: CallbackContext):
         fban_user_uname = None
 
     if isvalid and user_chat.type != "private":
-        message.reply_text("That's not a user!")
+        message.reply_text("Eso no es un usuario!")
         return
 
     if isvalid:
@@ -1055,7 +1055,7 @@ def unfban(update: Update, context: CallbackContext):
 
     fban, fbanreason, fbantime = sql.get_fban_user(fed_id, fban_user_id)
     if fban is False:
-        message.reply_text("This user is not fbanned!")
+        message.reply_text("Este usuario no está fbanned!")
         return
 
     banner = update.effective_user
@@ -1144,7 +1144,7 @@ def unfban(update: Update, context: CallbackContext):
         if not x:
             send_message(
                 update.effective_message,
-                "Un-fban failed, this user may already be un-fedbanned!",
+                "Un-fban falló, es posible que este usuario ya sea un-fedbanned!",
             )
             return
     except:
@@ -1184,12 +1184,12 @@ def unfban(update: Update, context: CallbackContext):
 
     if unfbanned_in_chats == 0:
         send_message(
-            update.effective_message, "This person has been un-fbanned in 0 chats."
+            update.effective_message, "Se ha eliminado la prohibición de esta persona en 0 chats."
         )
     if unfbanned_in_chats > 0:
         send_message(
             update.effective_message,
-            "This person has been un-fbanned in {} chats.".format(unfbanned_in_chats),
+            "Se ha eliminado la prohibición de esta persona en {} chats.".format(unfbanned_in_chats),
         )
     # Also do not spamming all fed admins
     """
@@ -1218,18 +1218,18 @@ def set_frules(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
     fed_id = sql.get_fed_id(chat.id)
 
     if not fed_id:
-        update.effective_message.reply_text("This group is not in any federation!")
+        update.effective_message.reply_text("Este grupo no está en ninguna federación!")
         return
 
     if is_user_fed_admin(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only fed admins can do this!")
+        update.effective_message.reply_text("Solo los administradores alimentados pueden hacer esto!")
         return
 
     if len(args) >= 1:
@@ -1245,7 +1245,7 @@ def set_frules(update: Update, context: CallbackContext):
         x = sql.set_frules(fed_id, markdown_rules)
         if not x:
             update.effective_message.reply_text(
-                f"Whoa! There was an error while setting federation rules! If you wondered why please ask in @{SUPPORT_CHAT}!"
+                f"¡Guau! ¡Hubo un error al configurar las reglas de la federación! Si se preguntó por qué, pregunte en @{SUPPORT_CHAT}!"
             )
             return
 
@@ -1256,14 +1256,14 @@ def set_frules(update: Update, context: CallbackContext):
             if ast.literal_eval(get_fedlog):
                 bot.send_message(
                     get_fedlog,
-                    "*{}* has updated the federation rules for the fed *{}*".format(
+                    "*{}* ha actualizado las reglas de la federación para el fed *{}*".format(
                         user.first_name, getfed["fname"]
                     ),
                     parse_mode="markdown",
                 )
-        update.effective_message.reply_text(f"Rules have been changed to :\n{rules}!")
+        update.effective_message.reply_text(f"Las reglas se han cambiado a :\n{rules}!")
     else:
-        update.effective_message.reply_text("Please write rules to set this up!")
+        update.effective_message.reply_text("Escribe reglas para configurar esto!")
 
 
 def get_frules(update: Update, context: CallbackContext):
@@ -1273,17 +1273,17 @@ def get_frules(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
     fed_id = sql.get_fed_id(chat.id)
     if not fed_id:
-        update.effective_message.reply_text("This group is not in any federation!")
+        update.effective_message.reply_text("Este grupo no está en ninguna federación!")
         return
 
     rules = sql.get_frules(fed_id)
-    text = "*Rules in this fed:*\n"
+    text = "*Reglas en este fed:*\n"
     text += rules
     update.effective_message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
 
@@ -1297,7 +1297,7 @@ def fed_broadcast(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -1306,7 +1306,7 @@ def fed_broadcast(update: Update, context: CallbackContext):
         fed_id = sql.get_fed_id(chat.id)
         fedinfo = sql.get_fed_info(fed_id)
         if is_user_fed_owner(fed_id, user.id) is False:
-            update.effective_message.reply_text("Only federation owners can do this!")
+            update.effective_message.reply_text("Solo los propietarios de federaciones pueden hacer esto!")
             return
         # Parsing md
         raw_text = msg.text
@@ -1341,9 +1341,9 @@ def fed_broadcast(update: Update, context: CallbackContext):
                 failed += 1
                 LOGGER.warning("Couldn't send broadcast to {}".format(str(chat)))
 
-        send_text = "The federation broadcast is complete"
+        send_text = "La transmisión de la federación está completa"
         if failed >= 1:
-            send_text += "{} the group failed to receive the message, probably because it left the Federation.".format(
+            send_text += "{} el grupo no pudo recibir el mensaje, probablemente porque dejó la Federación.".format(
                 failed
             )
         update.effective_message.reply_text(send_text)
@@ -1357,7 +1357,7 @@ def fed_ban_list(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -1366,12 +1366,12 @@ def fed_ban_list(update: Update, context: CallbackContext):
 
     if not fed_id:
         update.effective_message.reply_text(
-            "This group is not a part of any federation!"
+            "Este grupo no es parte de ninguna federación.!"
         )
         return
 
     if is_user_fed_owner(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only Federation owners can do this!")
+        update.effective_message.reply_text("Solo los propietarios de la federación pueden hacer esto!")
         return
 
     user = update.effective_user
@@ -1379,7 +1379,7 @@ def fed_ban_list(update: Update, context: CallbackContext):
     getfban = sql.get_all_fban_users(fed_id)
     if len(getfban) == 0:
         update.effective_message.reply_text(
-            "The federation ban list of {} is empty".format(info["fname"]),
+            "La lista de prohibición de federación de {} está vacía".format(info["fname"]),
             parse_mode=ParseMode.HTML,
         )
         return
@@ -1395,7 +1395,7 @@ def fed_ban_list(update: Update, context: CallbackContext):
                         "%H:%M:%S %d/%m/%Y", time.localtime(cek.get("value"))
                     )
                     update.effective_message.reply_text(
-                        "You can backup your data once every 30 minutes!\nYou can back up data again at `{}`".format(
+                        "Puede hacer una copia de seguridad de sus datos una vez cada 30 minutos!\nPuede hacer una copia de seguridad de los datos nuevamente en `{}`".format(
                             waktu
                         ),
                         parse_mode=ParseMode.MARKDOWN,
@@ -1439,7 +1439,7 @@ def fed_ban_list(update: Update, context: CallbackContext):
                         "%H:%M:%S %d/%m/%Y", time.localtime(cek.get("value"))
                     )
                     update.effective_message.reply_text(
-                        "You can back up data once every 30 minutes!\nYou can back up data again at `{}`".format(
+                        "Puede hacer una copia de seguridad de los datos una vez cada 30 minutos!\nPuede hacer una copia de seguridad de los datos nuevamente en `{}`".format(
                             waktu
                         ),
                         parse_mode=ParseMode.MARKDOWN,
@@ -1475,13 +1475,13 @@ def fed_ban_list(update: Update, context: CallbackContext):
                 )
             return
 
-    text = "<b>{} users have been banned from the federation {}:</b>\n".format(
+    text = "<b>{} los usuarios han sido expulsados ​​de la federación {}:</b>\n".format(
         len(getfban), info["fname"]
     )
     for users in getfban:
         getuserinfo = sql.get_all_fban_users_target(fed_id, users)
         if getuserinfo is False:
-            text = "There are no users banned from the federation {}".format(
+            text = "No hay usuarios baneados de la federación. {}".format(
                 info["fname"]
             )
             break
@@ -1504,7 +1504,7 @@ def fed_ban_list(update: Update, context: CallbackContext):
                     "%H:%M:%S %d/%m/%Y", time.localtime(cek.get("value"))
                 )
                 update.effective_message.reply_text(
-                    "You can back up data once every 30 minutes!\nYou can back up data again at `{}`".format(
+                    "Puede hacer una copia de seguridad de los datos una vez cada 30 minutos!\nPuede hacer una copia de seguridad de los datos nuevamente en `{}`".format(
                         waktu
                     ),
                     parse_mode=ParseMode.MARKDOWN,
@@ -1538,7 +1538,7 @@ def fed_notif(update: Update, context: CallbackContext):
 
     if not fed_id:
         update.effective_message.reply_text(
-            "This group is not a part of any federation!"
+            "Este grupo no es parte de ninguna federación.!"
         )
         return
 
@@ -1546,19 +1546,19 @@ def fed_notif(update: Update, context: CallbackContext):
         if args[0] in ("yes", "on"):
             sql.set_feds_setting(user.id, True)
             msg.reply_text(
-                "Reporting Federation back up! For every user who gets fban / unfban, you will be notified via PM."
+                "¡Federación de informes, copia de seguridad! Por cada usuario que obtenga fban / unban, se le notificará a través de PM."
             )
         elif args[0] in ("no", "off"):
             sql.set_feds_setting(user.id, False)
             msg.reply_text(
-                "Reporting Federation has stopped! For every user who gets fban / unfban, you will not be notified via PM."
+                "¡La Federación de Reportes se ha detenido! Por cada usuario que obtenga fban / unban, no se le notificará a través de PM."
             )
         else:
             msg.reply_text("Please enter `on`/`off`", parse_mode="markdown")
     else:
         getreport = sql.user_feds_report(user.id)
         msg.reply_text(
-            "Your current Federation report preferences: `{}`".format(getreport),
+            "Sus preferencias actuales de informes de la Federación: `{}`".format(getreport),
             parse_mode="markdown",
         )
 
@@ -1571,7 +1571,7 @@ def fed_chats(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -1580,23 +1580,23 @@ def fed_chats(update: Update, context: CallbackContext):
 
     if not fed_id:
         update.effective_message.reply_text(
-            "This group is not a part of any federation!"
+            "Este grupo no es parte de ninguna federación.!"
         )
         return
 
     if is_user_fed_admin(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only federation admins can do this!")
+        update.effective_message.reply_text("Solo los administradores de la federación pueden hacer esto!")
         return
 
     getlist = sql.all_fed_chats(fed_id)
     if len(getlist) == 0:
         update.effective_message.reply_text(
-            "No users are fbanned from the federation {}".format(info["fname"]),
+            "Ningún usuario está excluido de la federación. {}".format(info["fname"]),
             parse_mode=ParseMode.HTML,
         )
         return
 
-    text = "<b>New chat joined the federation {}:</b>\n".format(info["fname"])
+    text = "<b>Nuevo chat se unió a la federación {}:</b>\n".format(info["fname"])
     for chats in getlist:
         try:
             chat_name = dispatcher.bot.getChat(chats).title
@@ -1620,7 +1620,7 @@ def fed_chats(update: Update, context: CallbackContext):
             update.effective_message.reply_document(
                 document=output,
                 filename="fedchats.txt",
-                caption="Here is a list of all the chats that joined the federation {}.".format(
+                caption="Aquí hay una lista de todos los chats que se unieron a la federación. {}.".format(
                     info["fname"]
                 ),
             )
@@ -1635,7 +1635,7 @@ def fed_import_bans(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -1645,12 +1645,12 @@ def fed_import_bans(update: Update, context: CallbackContext):
 
     if not fed_id:
         update.effective_message.reply_text(
-            "This group is not a part of any federation!"
+            "Este grupo no es parte de ninguna federación.!"
         )
         return
 
     if is_user_fed_owner(fed_id, user.id) is False:
-        update.effective_message.reply_text("Only Federation owners can do this!")
+        update.effective_message.reply_text("Solo los propietarios de la federación pueden hacer esto!")
         return
 
     if msg.reply_to_message and msg.reply_to_message.document:
@@ -1663,7 +1663,7 @@ def fed_import_bans(update: Update, context: CallbackContext):
                     "%H:%M:%S %d/%m/%Y", time.localtime(cek.get("value"))
                 )
                 update.effective_message.reply_text(
-                    "You can get your data once every 30 minutes!\nYou can get data again at `{}`".format(
+                    "Puede obtener sus datos una vez cada 30 minutos!\nPuede obtener datos nuevamente en `{}`".format(
                         waktu
                     ),
                     parse_mode=ParseMode.MARKDOWN,
@@ -1684,7 +1684,7 @@ def fed_import_bans(update: Update, context: CallbackContext):
             file_info = bot.get_file(msg.reply_to_message.document.file_id)
         except BadRequest:
             msg.reply_text(
-                "Try downloading and re-uploading the file, this one seems broken!"
+                "Intente descargar y volver a cargar el archivo, este parece roto!"
             )
             return
         fileformat = msg.reply_to_message.document.file_name.split(".")[-1]
@@ -1751,11 +1751,11 @@ def fed_import_bans(update: Update, context: CallbackContext):
                     multi_import_username,
                     multi_import_reason,
                 )
-            text = "Blocks were successfully imported. {} people are blocked.".format(
+            text = "Los bloques se importaron correctamente. {} personas están bloqueadas.".format(
                 success
             )
             if failed >= 1:
-                text += " {} Failed to import.".format(failed)
+                text += " {} No se pudo importar.".format(failed)
             get_fedlog = sql.get_fed_log(fed_id)
             if get_fedlog:
                 if ast.literal_eval(get_fedlog):
@@ -1829,9 +1829,9 @@ def fed_import_bans(update: Update, context: CallbackContext):
                 )
             csvFile.close()
             os.remove("fban_{}.csv".format(msg.reply_to_message.document.file_id))
-            text = "Files were imported successfully. {} people are banned.".format(success)
+            text = "Los archivos se importaron correctamente. {} personas están prohibidas.".format(success)
             if failed >= 1:
-                text += " {} Failed to import.".format(failed)
+                text += " {} No se pudo importar.".format(failed)
             get_fedlog = sql.get_fed_log(fed_id)
             if get_fedlog:
                 if ast.literal_eval(get_fedlog):
@@ -1842,7 +1842,7 @@ def fed_import_bans(update: Update, context: CallbackContext):
                         teks += " {} Failed to import.".format(failed)
                     bot.send_message(get_fedlog, teks, parse_mode="markdown")
         else:
-            send_message(update.effective_message, "This file is not supported.")
+            send_message(update.effective_message, "Este archivo no es compatible.")
             return
         send_message(update.effective_message, text)
 
@@ -1853,7 +1853,7 @@ def del_fed_button(update: Update, context: CallbackContext):
     fed_id = query.data.split("_")[1]
 
     if fed_id == "cancel":
-        query.message.edit_text("Federation deletion cancelled")
+        query.message.edit_text("Eliminación de la federación cancelada")
         return
 
     getfed = sql.get_fed_info(fed_id)
@@ -1861,7 +1861,7 @@ def del_fed_button(update: Update, context: CallbackContext):
         delete = sql.del_fed(fed_id)
         if delete:
             query.message.edit_text(
-                "You have removed your Federation! Now all the Groups that are connected with `{}` do not have a Federation.".format(
+                "¡Has eliminado tu Federación! Ahora todos los grupos que están conectados con `{}` no tienen una federación.".format(
                     getfed["fname"]
                 ),
                 parse_mode="markdown",
@@ -1893,7 +1893,7 @@ def fed_stat_user(update: Update, context: CallbackContext):
             if user_name is False:
                 send_message(
                     update.effective_message,
-                    "Fed {} not found!".format(fed_id),
+                    "Fed {} no encontrado!".format(fed_id),
                     parse_mode="markdown",
                 )
                 return
@@ -1902,7 +1902,7 @@ def fed_stat_user(update: Update, context: CallbackContext):
             if not reason:
                 send_message(
                     update.effective_message,
-                    "{} is not banned in this federation!".format(user_name),
+                    "{} no está prohibido en esta federación!".format(user_name),
                 )
             else:
                 teks = "{} banned in this federation because:\n`{}`\n*Banned at:* `{}`".format(
@@ -1921,7 +1921,7 @@ def fed_stat_user(update: Update, context: CallbackContext):
         if len(fbanlist) == 0:
             send_message(
                 update.effective_message,
-                "{} is not banned in any federation!".format(user_name),
+                "{} no está prohibido en ninguna federación!".format(user_name),
             )
             return
         else:
@@ -1939,7 +1939,7 @@ def fed_stat_user(update: Update, context: CallbackContext):
         if len(fbanlist) == 0:
             send_message(
                 update.effective_message,
-                "{} is not banned in any federation!".format(user_name),
+                "{} no está prohibido en ninguna federación!".format(user_name),
             )
         else:
             teks = "{} has been banned in this federation:\n".format(user_name)
@@ -1964,12 +1964,12 @@ def fed_stat_user(update: Update, context: CallbackContext):
         if not reason:
             send_message(
                 update.effective_message,
-                "{} is not banned in this federation".format(name),
+                "{} no está prohibido en esta federación".format(name),
             )
             return
         send_message(
             update.effective_message,
-            "{} banned in this federation because:\n`{}`\n*Banned at:* `{}`".format(
+            "{} prohibido en esta federación porque:\n`{}`\n*Banned at:* `{}`".format(
                 name, reason, fbantime
             ),
             parse_mode="markdown",
@@ -1985,34 +1985,34 @@ def set_fed_log(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
     if args:
         fedinfo = sql.get_fed_info(args[0])
         if not fedinfo:
-            send_message(update.effective_message, "This Federation does not exist!")
+            send_message(update.effective_message, "Esta Federación no existe!")
             return
         isowner = is_user_fed_owner(args[0], user.id)
         if not isowner:
             send_message(
                 update.effective_message,
-                "Only federation creator can set federation logs.",
+                "Solo el creador de la federación puede establecer registros de la federación.",
             )
             return
         setlog = sql.set_fed_log(args[0], chat.id)
         if setlog:
             send_message(
                 update.effective_message,
-                "Federation log `{}` has been set to {}".format(
+                "El registro de federación `{}` se ha configurado en {}".format(
                     fedinfo["fname"], chat.title
                 ),
                 parse_mode="markdown",
             )
     else:
         send_message(
-            update.effective_message, "You have not provided your federated ID!"
+            update.effective_message, "No ha proporcionado su federated ID!"
         )
 
 
@@ -2025,34 +2025,34 @@ def unset_fed_log(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
     if args:
         fedinfo = sql.get_fed_info(args[0])
         if not fedinfo:
-            send_message(update.effective_message, "This Federation does not exist!")
+            send_message(update.effective_message, "Esta Federación no existe!")
             return
         isowner = is_user_fed_owner(args[0], user.id)
         if not isowner:
             send_message(
                 update.effective_message,
-                "Only federation creator can set federation logs.",
+                "Solo el creador de la federación puede establecer registros de la federación.",
             )
             return
         setlog = sql.set_fed_log(args[0], None)
         if setlog:
             send_message(
                 update.effective_message,
-                "Federation log `{}` has been revoked on {}".format(
+                "El registro de la federación `{}` ha sido revocado el {}".format(
                     fedinfo["fname"], chat.title
                 ),
                 parse_mode="markdown",
             )
     else:
         send_message(
-            update.effective_message, "You have not provided your federated ID!"
+            update.effective_message, "No ha proporcionado su federated ID!"
         )
 
 
@@ -2065,7 +2065,7 @@ def subs_feds(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -2073,25 +2073,25 @@ def subs_feds(update: Update, context: CallbackContext):
     fedinfo = sql.get_fed_info(fed_id)
 
     if not fed_id:
-        send_message(update.effective_message, "This group is not in any federation!")
+        send_message(update.effective_message, "Este grupo no está en ninguna federación!")
         return
 
     if is_user_fed_owner(fed_id, user.id) is False:
-        send_message(update.effective_message, "Only the fed owner can do this!")
+        send_message(update.effective_message, "Solo el propietario alimentado puede hacer esto!")
         return
 
     if args:
         getfed = sql.search_fed_by_id(args[0])
         if getfed is False:
             send_message(
-                update.effective_message, "Please enter a valid federation id."
+                update.effective_message, "Ingrese una id de federación válida."
             )
             return
         subfed = sql.subs_fed(args[0], fed_id)
         if subfed:
             send_message(
                 update.effective_message,
-                "Federation `{}` has subscribed to the federation `{}`. Every time there is a Fedban from that federation, this federation will also ban that user.".format(
+                "La federación `{}` se ha suscrito a la federación `{}`. Cada vez que haya un Fedban de esa federación, esta federación también prohibirá a ese usuario.".format(
                     fedinfo["fname"], getfed["fname"]
                 ),
                 parse_mode="markdown",
@@ -2109,14 +2109,14 @@ def subs_feds(update: Update, context: CallbackContext):
         else:
             send_message(
                 update.effective_message,
-                "Federation `{}` is already subscribed the federation `{}`.".format(
+                "La federación `{}` ya está suscrita a la federación `{}`.".format(
                     fedinfo["fname"], getfed["fname"]
                 ),
                 parse_mode="markdown",
             )
     else:
         send_message(
-            update.effective_message, "You have not provided your federated ID!"
+            update.effective_message, "No ha proporcionado su federated ID!"
         )
 
 
@@ -2129,7 +2129,7 @@ def unsubs_feds(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -2137,25 +2137,25 @@ def unsubs_feds(update: Update, context: CallbackContext):
     fedinfo = sql.get_fed_info(fed_id)
 
     if not fed_id:
-        send_message(update.effective_message, "This group is not in any federation!")
+        send_message(update.effective_message, "Este grupo no está en ninguna federación!")
         return
 
     if is_user_fed_owner(fed_id, user.id) is False:
-        send_message(update.effective_message, "Only the fed owner can do this!")
+        send_message(update.effective_message, "Solo el propietario alimentado puede hacer esto!")
         return
 
     if args:
         getfed = sql.search_fed_by_id(args[0])
         if getfed is False:
             send_message(
-                update.effective_message, "Please enter a valid federation id."
+                update.effective_message, "Ingrese una id de federación válida."
             )
             return
         subfed = sql.unsubs_fed(args[0], fed_id)
         if subfed:
             send_message(
                 update.effective_message,
-                "Federation `{}` now unsubscribed from the fed `{}`.".format(
+                "Federación `{}` ahora canceló su suscripción al fed `{}`.".format(
                     fedinfo["fname"], getfed["fname"]
                 ),
                 parse_mode="markdown",
@@ -2173,14 +2173,14 @@ def unsubs_feds(update: Update, context: CallbackContext):
         else:
             send_message(
                 update.effective_message,
-                "Federation `{}` is not subscribed to `{}`.".format(
+                "La federación `{}` no está suscrita a `{}`.".format(
                     fedinfo["fname"], getfed["fname"]
                 ),
                 parse_mode="markdown",
             )
     else:
         send_message(
-            update.effective_message, "You have not provided your federated ID!"
+            update.effective_message, "No ha proporcionado su federated ID!"
         )
 
 
@@ -2193,7 +2193,7 @@ def get_myfedsubs(update: Update, context: CallbackContext):
     if chat.type == "private":
         send_message(
             update.effective_message,
-            "This command is specific to groups, not our pm!",
+            "Este comando es específico para grupos, no nuestro pm!",
         )
         return
 
@@ -2201,11 +2201,11 @@ def get_myfedsubs(update: Update, context: CallbackContext):
     fedinfo = sql.get_fed_info(fed_id)
 
     if not fed_id:
-        send_message(update.effective_message, "This group is not in any federation!")
+        send_message(update.effective_message, "Este grupo no está en ninguna federación!")
         return
 
     if is_user_fed_owner(fed_id, user.id) is False:
-        send_message(update.effective_message, "Only the fed owner can do this!")
+        send_message(update.effective_message, "Solo el propietario alimentado puede hacer esto!")
         return
 
     try:
@@ -2216,20 +2216,20 @@ def get_myfedsubs(update: Update, context: CallbackContext):
     if len(getmy) == 0:
         send_message(
             update.effective_message,
-            "Federation `{}` is not subscribed to any federation.".format(
+            "La federación `{}` no está suscrita a ninguna federación.".format(
                 fedinfo["fname"]
             ),
             parse_mode="markdown",
         )
         return
     else:
-        listfed = "Federation `{}` is subscribed to federation:\n".format(
+        listfed = "La federación `{}` está suscrita a la federación:\n".format(
             fedinfo["fname"]
         )
         for x in getmy:
             listfed += "- `{}`\n".format(x)
         listfed += (
-            "\nTo get fed info `/fedinfo <fedid>`. To unsubscribe `/unsubfed <fedid>`."
+            "\nPara recibir información `/fedinfo <fedid>`. Para darse de baja `/unsubfed <fedid>`."
         )
         send_message(update.effective_message, listfed, parse_mode="markdown")
 
@@ -2241,11 +2241,11 @@ def get_myfeds_list(update: Update, context: CallbackContext):
 
     fedowner = sql.get_user_owner_fed_full(user.id)
     if fedowner:
-        text = "*You are the owner of feds:\n*"
+        text = "*Eres el dueño de los federales:\n*"
         for f in fedowner:
             text += "- `{}`: *{}*\n".format(f["fed_id"], f["fed"]["fname"])
     else:
-        text = "*You do not have any feds!*"
+        text = "*No tienes federales!*"
     send_message(update.effective_message, text, parse_mode="markdown")
 
 
@@ -2282,7 +2282,7 @@ def welcome_fed(update: Update, context: CallbackContext):
     fban, fbanreason, fbantime = sql.get_fban_user(fed_id, user.id)
     if fban:
         update.effective_message.reply_text(
-            "This user is banned in the current federation! I will remove him."
+            "¡Este usuario está prohibido en la federación actual! Lo voy a quitar."
         )
         bot.kick_chat_member(chat.id, user.id)
         return True
@@ -2293,7 +2293,7 @@ def welcome_fed(update: Update, context: CallbackContext):
 def __stats__():
     all_fbanned = sql.get_all_fban_users_global()
     all_feds = sql.get_all_feds_users_global()
-    return "• {} banned users across {} Federations".format(
+    return "• {} usuarios prohibidos en {} Federaciones".format(
         len(all_fbanned), len(all_feds)
     )
 
@@ -2306,15 +2306,15 @@ def __user_info__(user_id, chat_id):
         infoname = info["fname"]
 
         if int(info["owner"]) == user_id:
-            text = "Federation owner of: <b>{}</b>.".format(infoname)
+            text = "Propietario de la federación de: <b>{}</b>.".format(infoname)
         elif is_user_fed_admin(fed_id, user_id):
-            text = "Federation admin of: <b>{}</b>.".format(infoname)
+            text = "Administrador de la federación de: <b>{}</b>.".format(infoname)
 
         elif fban:
-            text = "Federation banned: <b>Yes</b>"
-            text += "\n<b>Reason:</b> {}".format(fbanreason)
+            text = "Federación prohibida: <b>Yes</b>"
+            text += "\n<b>Razón:</b> {}".format(fbanreason)
         else:
-            text = "Federation banned: <b>No</b>"
+            text = "Federación prohibida: <b>No</b>"
     else:
         text = ""
     return text
@@ -2341,45 +2341,45 @@ def get_chat(chat_id, chat_data):
 
 def fed_owner_help(update: Update, context: CallbackContext):
     update.effective_message.reply_text(
-        """*👑 Fed Owner Only:*
- • `/newfed <fed_name>`*:* Creates a Federation, One allowed per user
- • `/renamefed <fed_id> <new_fed_name>`*:* Renames the fed id to a new name
- • `/delfed <fed_id>`*:* Delete a Federation, and any information related to it. Will not cancel blocked users
- • `/fpromote <user>`*:* Assigns the user as a federation admin. Enables all commands for the user under `Fed Admins`
- • `/fdemote <user>`*:* Drops the User from the admin Federation to a normal User
- • `/subfed <fed_id>`*:* Subscribes to a given fed ID, bans from that subscribed fed will also happen in your fed
- • `/unsubfed <fed_id>`*:* Unsubscribes to a given fed ID
- • `/setfedlog <fed_id>`*:* Sets the group as a fed log report base for the federation
- • `/unsetfedlog <fed_id>`*:* Removed the group as a fed log report base for the federation
- • `/fbroadcast <message>`*:* Broadcasts a messages to all groups that have joined your fed
- • `/fedsubs`*:* Shows the feds your group is subscribed to `(broken rn)`""",
+        """*👑 Solo propietario de la Fed:*
+ • `/newfed <fed_name>`*:* Crea una federación, una permitida por usuario
+ • `/renamefed <fed_id> <new_fed_name>`*:* Cambia el nombre de la identificación de fed a un nuevo nombre
+ • `/delfed <fed_id>`*:* Elimina una Federación y cualquier información relacionada con ella. No cancelará usuarios bloqueados
+ • `/fpromote <user>`*:* Asigna al usuario como administrador de la federación. Habilita todos los comandos para el usuario en `Admins. Fed`
+ • `/fdemote <user>`*:* Elimina al usuario de la federación administrativa a un usuario normal
+ • `/subfed <fed_id>`*:* Se suscribe a una ID de feed determinada, las prohibiciones de ese feed suscrito también se producirán en tu feed.
+ • `/unsubfed <fed_id>`*:* Se cancela la suscripción a un ID de feed determinado
+ • `/setfedlog <fed_id>`*:* Establece el grupo como base de informes de registros alimentados para la federación.
+ • `/unsetfedlog <fed_id>`*:* Se eliminó el grupo como base de informes de registros alimentados para la federación.
+ • `/fbroadcast <message>`*:* Transmite un mensaje a todos los grupos que se han unido a su feed.
+ • `/fedsubs`*:* Muestra los federales a los que está suscrito su grupo `(rn roto)`""",
         parse_mode=ParseMode.MARKDOWN,
     )
 
 
 def fed_admin_help(update: Update, context: CallbackContext):
     update.effective_message.reply_text(
-        """*🔱 Fed Admins:*
- • `/fban <user> <reason>`*:* Fed bans a user
- • `/unfban <user> <reason>`*:* Removes a user from a fed ban
- • `/fedinfo <fed_id>`*:* Information about the specified Federation
- • `/joinfed <fed_id>`*:* Join the current chat to the Federation. Only chat owners can do this. Every chat can only be in one Federation
- • `/leavefed <fed_id>`*:* Leave the Federation given. Only chat owners can do this
- • `/setfrules <rules>`*:* Arrange Federation rules
- • `/fedadmins`*:* Show Federation admin
- • `/fbanlist`*:* Displays all users who are victimized at the Federation at this time
- • `/fedchats`*:* Get all the chats that are connected in the Federation
- • `/chatfed `*:* See the Federation in the current chat\n""",
+        """*🔱 Administradores de la Fed:*
+ • `/fban <user> <reason>`*:* Fed prohíbe a un usuario
+ • `/unfban <user> <reason>`*:* Eliminar a un usuario de una prohibición federal
+ • `/fedinfo <fed_id>`*:* Información sobre la Federación especificada
+ • `/joinfed <fed_id>`*:* Únase al chat actual de la Federación. Solo los propietarios de chat pueden hacer esto. Cada chat solo puede estar en una Federación
+ • `/leavefed <fed_id>`*:* Deja la Federación dada. Solo los propietarios del chat pueden hacer esto
+ • `/setfrules <rules>`*:* Organizar las reglas de la Federación
+ • `/fedadmins`*:* Mostrar administrador de la Federación
+ • `/fbanlist`*:* Muestra todos los usuarios que son victimizados en la Federación en este momento.
+ • `/fedchats`*:* Obtén todos los chats que están conectados en la Federación
+ • `/chatfed `*:* Ver la Federación en el chat actual\n""",
         parse_mode=ParseMode.MARKDOWN,
     )
 
 
 def fed_user_help(update: Update, context: CallbackContext):
     update.effective_message.reply_text(
-        """*🎩 Any user:*
- • `/fbanstat`*:* Shows if you/or the user you are replying to or their username is fbanned somewhere or not
- • `/fednotif <on/off>`*:* Federation settings not in PM when there are users who are fbaned/unfbanned
- • `/frules`*:* See Federation regulations\n""",
+        """*🎩 Cualquier usuario:*
+ • `/fbanstat`*:* Muestra si usted / o el usuario al que está respondiendo o su nombre de usuario está prohibido en algún lugar o no
+ • `/fednotif <on/off>`*:* La configuración de la federación no está en PM cuando hay usuarios que están prohibidos / no prohibidos
+ • `/frules`*:* Ver las regulaciones de la Federación\n""",
         parse_mode=ParseMode.MARKDOWN,
     )
 
@@ -2387,16 +2387,16 @@ def fed_user_help(update: Update, context: CallbackContext):
 __mod_name__ = "Federations"
 
 __help__ = """
-Everything is fun, until a spammer starts entering your group, and you have to block it. Then you need to start banning more, and more, and it hurts.
-But then you have many groups, and you don't want this spammer to be in one of your groups - how can you deal? Do you have to manually block it, in all your groups?\n
-*No longer!* With Federation, you can make a ban in one chat overlap with all other chats.\n
-You can even designate federation admins, so your trusted admin can ban all the spammers from chats you want to protect.\n
+Todo es divertido, hasta que un spammer empieza a entrar en tu grupo y tienes que bloquearlo. Entonces necesitas empezar a prohibir más y más, y duele.
+Pero entonces tienes muchos grupos y no quieres que este spammer esté en uno de tus grupos, ¿cómo puedes lidiar? ¿Tienes que bloquearlo manualmente, en todos tus grupos?\n
+*No más!* Con Federación, puede hacer que una prohibición en un chat se superponga con todos los demás chats.\n
+Incluso puede designar administradores de la federación, por lo que su administrador de confianza puede prohibir a todos los spammers de los chats que desea proteger.\n
 
-*Commands:*\n
-Feds are now divided into 3 sections for your ease. 
-• `/fedownerhelp`*:* Provides help for fed creation and owner only commands
-• `/fedadminhelp`*:* Provides help for fed administration commands
-• `/feduserhelp`*:* Provides help for commands anyone can use
+*Comandos:*\n
+Los federales ahora están divididos en 3 secciones para su comodidad. 
+• `/fedownerhelp`*:* Proporciona ayuda para la creación alimentada y los comandos solo para el propietario.
+• `/fedadminhelp`*:* Proporciona ayuda para los comandos de administración alimentados
+• `/feduserhelp`*:* Proporciona ayuda para los comandos que cualquiera puede usar.
 
 """
 
