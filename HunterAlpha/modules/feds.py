@@ -2384,7 +2384,7 @@ def fed_user_help(update: Update, context: CallbackContext):
     )
 
 
-__mod_name__ = "Federations"
+__mod_name__ = "Federación"
 
 __help__ = """
 Todo es divertido, hasta que un spammer empieza a entrar en tu grupo y tienes que bloquearlo. Entonces necesitas empezar a prohibir más y más, y duele.
