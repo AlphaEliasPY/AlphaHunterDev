@@ -44,7 +44,7 @@ async def is_user_admin(user_id: int, chat_id):
 
 async def HunterAlpha_is_admin(chat_id: int):
     status = False
-    HunterAlpha = await telethn.get_me()
+    DarkGod14Bot = await telethn.get_me()
     async for user in telethn.iter_participants(
         chat_id, filter=ChannelParticipantsAdmins
     ):
@@ -107,3 +107,15 @@ async def can_delete_messages(message):
         return status
     else:
         return False
+
+async def user_can_purge(user_id: int, message):
+    status = False
+    if message.is_private:
+        return True
+
+    if user_id in SUDO_USERS:
+        return True
+
+    perms = await telethn.get_permissions(message.chat_id, user_id)
+    status = perms.delete_messages
+    return status
